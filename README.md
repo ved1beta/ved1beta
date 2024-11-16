@@ -4,8 +4,6 @@
 ## About Me
 🚀 Young and ambitious developer on a mission to create impact through innovative AI solutions! Currently pursuing Minor in AI from IIT Ropar while diving deep into self-learning adventures.
 
-💡 Passionate about Machine Learning with special love for Computer Vision and NLP - always excited to tackle challenging problems where AI meets real-world impact.
-
 🔮 Whether it's teaching machines to see, understand language, or solve complex problems, I'm your go-to person for turning AI dreams into reality! Let's build something amazing together!
 
 ## Technical Skills 🛠️
