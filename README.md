@@ -1,35 +1,31 @@
-👋 Hi, I'm Jerome Hardaway! I’m the Executive Director at **Vets Who Code** 🎖️ and a software engineer focused on harnessing technology to make significant impacts in the tech industry and beyond.
+👋 Hi, I'm Ved! I’m🎖️ a Machine Learning engineer focused on harnessing technology to make significant impacts in the tech industry and beyond.
+
 
 ## About Me
-With a background in military service and significant leadership in tech education, I bring a unique combination of discipline, strategic vision, and technical prowess to the programming world. My passion lies in developing software solutions that not only solve problems but also create opportunities for those transitioning from military to civilian life.
+🚀 Young and ambitious developer on a mission to create impact through innovative AI solutions! Currently pursuing Minor in AI from IIT Ropar while diving deep into self-learning adventures.
+
+💡 Passionate about Machine Learning with special love for Computer Vision and NLP - always excited to tackle challenging problems where AI meets real-world impact.
+
+🔮 Whether it's teaching machines to see, understand language, or solve complex problems, I'm your go-to person for turning AI dreams into reality! Let's build something amazing together!
 
 ## Technical Skills 🛠️
-- **Languages:** JavaScript, Python, TypeScript
-- **Frameworks & Libraries:** React, Next.js, Node.js, FastAPI
-- **Tools & Platforms:** GitHub, Docker, Azure, Vercel, Cloudinary, OpenAI
-- **Data Science & AI:** Proficient in machine learning concepts and data analysis, applying these to optimize educational outcomes.
-
+- **Languages:** Python, C , javascript 
+- **Frameworks & Libraries:** Fast ai , Pytorch , Pandas , Matplotlib
+- **Tools & Platforms:** GitHub, Docker, , Vercel, Neovim , Vscode , JupyterNoterbook , Aws
+- **Machine Learning Specialist:** Proficient in statistical analysis, predictive modeling (Regression, Decision Trees, Random Forest), and advanced algorithms (CatBoost, SGD) with strong focus on optimization and accuracy.
 ## Key Projects 📚
-- **[Vets Who Code App](https://github.com/Vets-Who-Code/vets-who-code-app):** Leading the development of an educational platform using AI to customize veteran learning experiences.
-- **[Web Curriculum](https://github.com/Vets-Who-Code/web-curriculum):** Curating a comprehensive web development curriculum that bridges the gap from novice to job-ready developer.
-- **[Prework](https://github.com/Vets-Who-Code/Prework):** Structuring initial coding exercises that prepare veterans for more advanced topics in web development.
-- **[VetsWhoCode Extension Pack](https://github.com/Vets-Who-Code/vetswhocode-extension-pack):** Compiling essential VS Code extensions to enhance coding efficiency for our students.
-- **[VetsWhoCode VS Code Theme](https://github.com/Vets-Who-Code/vetswhocode-vs-code-theme):** Designing a custom Visual Studio Code theme tailored for our community.
+- **[WED BOT](https://talktoved.streamlit.app):** A bot who mimics my personality and talks like me (fun fact: It has 2 personalities). None is like the real me 
+- **[Loan approval predictor](https://github.com/ved1beta/LOAN_model/):** Utilized a huge dataset of loan defaults and performed data transformation and model training. Tried different methods to get 95%+ accuracy and deployed with AWS and implemented CI/CD pipelines
+- **[Image classification Model](https://huggingface.co/spaces/V-E-D/MINST):** Trained a neural network from scratch in pure Python (no libraries) and achieved 80%+ accuracy on the MNIST dataset
 
-You can view these and more [here](https://jeromehardaway.github.io/#).
+Many in deployment many failed T_T"
 
 ## Leadership & Advocacy 🌟
-- **Vets Who Code:** As the Executive Director, I have transformed traditional educational models by integrating advanced technology and data analytics to better serve veteran students.
-- **Community Engagement:** Built a robust community of tech professionals and veterans, facilitating mentorship, networking, and career opportunities. 🤝
-- **Public Speaking:** Regular speaker at tech conferences, advocating for veterans’ transition into tech and sharing insights on tech education innovations. 🎤
-
-## Professional Goals 🚀
-- **Career Development:** Focused on furthering my career in software development, specifically in roles that leverage my leadership experience and technical skills in building impactful tech solutions.
-- **Continuous Learning:** Committed to ongoing professional development by staying updated with the latest tech trends and advancing my coding skills. 📈
+- **FreecodeCamp:** Wrorked as Teaching Assistance Utilized advanced teaching methods to facilitate hands-on coding projects, resulting in a 30% increase in student engagement and participation levels.
 
 ## Connect with Me 📬
-- 🐦 [Twitter](https://twitter.com/JeromeHardaway)
-- 📫 [Email](mailto:jerome@vetswhocode.io)
-- 🔗 [LinkedIn](https://linkedin.com/in/jeromehardaway)
+- 🐦 [Twitter](https://twitter.com/ant_vedaya)
+- 📫 [Email](mailto:ved.work2024@gamil.com)
+- 🔗 [LinkedIn](https://www.linkedin.com/in/vedant-thote-a9a13332a/)
 
 I’m looking forward to collaborating on projects that are at the intersection of technology and social good. Let’s connect! 🌍
