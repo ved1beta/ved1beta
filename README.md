@@ -18,6 +18,7 @@
 - **[Soptify song recom](https://github.com/ved1beta/spotify_recc/tree/main):** Optimized a recommendation system through A/B testing and advanced algorithms, boosting click-through rates by 60%, user satisfaction by 35%, engagement by 40%, and listening time by 25%.
 Many in deployment many failed T_T"
 - **[Fine tuning Guide](https://github.com/ved1beta/Fine_tuning):** Fine-tuning the google/bert-base-cased language model using the SFTTrainer from TRL with memory-efficient settings like gradient checkpointing and 8-bit quantization.
+
 Many in deployment many failed T_T"
 
 ## Leadership & Advocacy 🌟
