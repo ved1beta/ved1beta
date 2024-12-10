@@ -17,6 +17,8 @@
 - **[Loan approval predictor](https://github.com/ved1beta/LOAN_model/):** Utilized a huge dataset of loan defaults and performed data transformation and model training. Tried different methods to get 95%+ accuracy and deployed with AWS and implemented CI/CD pipelines
 - **[Image classification Model](https://huggingface.co/spaces/V-E-D/MINST):** Trained a neural network from scratch in pure Python (no libraries) and achieved 80%+ accuracy on the MNIST dataset
 - **[Soptify song recom](https://github.com/ved1beta/spotify_recc/tree/main):** Optimized a recommendation system through A/B testing and advanced algorithms, boosting click-through rates by 60%, user satisfaction by 35%, engagement by 40%, and listening time by 25%.
+# Working on 
+- **[LLM tokenizer](https://github.com/ved1beta/token):**  Bulding a tokenizer for llm from scratch :)
 Many in deployment many failed T_T"
 - **[Fine tuning Guide](https://github.com/ved1beta/Fine_tuning):** Fine-tuning the google/bert-base-cased language model using the SFTTrainer from TRL with memory-efficient settings like gradient checkpointing and 8-bit quantization.
 
