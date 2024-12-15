@@ -14,12 +14,13 @@
 ## Key Projects 📚
 - **[WED BOT](https://talktoved.streamlit.app):** A bot who mimics my personality and talks like me (fun fact: It has 2 personalities). None is like the real me
 - **[Pdf_summariser](https://github.com/ved1beta/RAG_keyee):** Innovative RAG web app for PDF analysis using machine learning. Enables intelligent document summarization and information retrieval through advanced embedding and tokenization techniques. Transforms PDF content into actionable insights with AI-powered processing.
+- **[LLM tokenizer](https://github.com/ved1beta/token):**  Bulding a tokenizer for llm from scratch :)
 - **[Loan approval predictor](https://github.com/ved1beta/LOAN_model/):** Utilized a huge dataset of loan defaults and performed data transformation and model training. Tried different methods to get 95%+ accuracy and deployed with AWS and implemented CI/CD pipelines
 - **[Image classification Model](https://huggingface.co/spaces/V-E-D/MINST):** Trained a neural network from scratch in pure Python (no libraries) and achieved 80%+ accuracy on the MNIST dataset
 - **[Soptify song recom](https://github.com/ved1beta/spotify_recc/tree/main):** Optimized a recommendation system through A/B testing and advanced algorithms, boosting click-through rates by 60%, user satisfaction by 35%, engagement by 40%, and listening time by 25%.
 - **[Fine tuning Guide](https://github.com/ved1beta/Fine_tuning):** Fine-tuning the google/bert-base-cased language model using the SFTTrainer from TRL with memory-efficient settings like gradient checkpointing and 8-bit quantization.
 # Working on 
-- **[LLM tokenizer](https://github.com/ved1beta/token):**  Bulding a tokenizer for llm from scratch :)
+
 Many in deployment many failed T_T"
 
 - **[v0 clone](https://github.com/ved1beta/v.o_clone):** tried making a v0 clone that generats websited was able to create a backed to get the code from gemini but showing it on frontend and running it in a container was not able to do that (upkilling it right now will make it someday pakka : ) 
