@@ -14,7 +14,7 @@
 ## Key Projects 📚
 - **[WED BOT](https://talktoved.streamlit.app):** A bot who mimics my personality and talks like me (fun fact: It has 2 personalities). None is like the real me
 - **[Pdf_summariser](https://github.com/ved1beta/RAG_keyee):** Innovative RAG web app for PDF analysis using machine learning. Enables intelligent document summarization and information retrieval through advanced embedding and tokenization techniques. Transforms PDF content into actionable insights with AI-powered processing.
-- **[LLM tokenizer](https://github.com/ved1beta/token):**  Bulding a tokenizer for llm from scratch :)
+- **[LLM tokenizer](http://13.233.199.53:8000/):**  Bulding a tokenizer for llm from scratch :)
 - **[Loan approval predictor](https://github.com/ved1beta/LOAN_model/):** Utilized a huge dataset of loan defaults and performed data transformation and model training. Tried different methods to get 95%+ accuracy and deployed with AWS and implemented CI/CD pipelines
 - **[Image classification Model](https://huggingface.co/spaces/V-E-D/MINST):** Trained a neural network from scratch in pure Python (no libraries) and achieved 80%+ accuracy on the MNIST dataset
 - **[Soptify song recom](https://github.com/ved1beta/spotify_recc/tree/main):** Optimized a recommendation system through A/B testing and advanced algorithms, boosting click-through rates by 60%, user satisfaction by 35%, engagement by 40%, and listening time by 25%.
