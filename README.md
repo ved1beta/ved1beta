@@ -25,6 +25,8 @@ Many in deployment many failed T_T"
 
 - **[v0 clone](https://github.com/ved1beta/v.o_clone):** tried making a v0 clone that generats websited was able to create a backed to get the code from gemini but showing it on frontend and running it in a container was not able to do that (upkilling it right now will make it someday pakka : ) 
 
+- **[Research-copilot](https://github.com/ved1beta/research-copilot):** working on a chat bot that will help in research and provide relavent links citations and summarization of given paper made with RAG and llama models used vector DB storage nad a=Advanced Rag models 
+
 ## Leadership & Advocacy 🌟
 - **FreecodeCamp:** Wrorked as Teaching Assistance Utilized advanced teaching methods to facilitate hands-on coding projects, resulting in a 30% increase in student engagement and participation levels.
 
