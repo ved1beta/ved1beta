@@ -19,8 +19,9 @@
 - **[Image classification Model](https://huggingface.co/spaces/V-E-D/MINST):** Trained a neural network from scratch in pure Python (no libraries) and achieved 80%+ accuracy on the MNIST dataset
 - **[Soptify song recom](https://github.com/ved1beta/spotify_recc/tree/main):** Optimized a recommendation system through A/B testing and advanced algorithms, boosting click-through rates by 60%, user satisfaction by 35%, engagement by 40%, and listening time by 25%.
 - **[Fine tuning Guide](https://github.com/ved1beta/Fine_tuning):** Fine-tuning the google/bert-base-cased language model using the SFTTrainer from TRL with memory-efficient settings like gradient checkpointing and 8-bit quantization.
-# Working on 
 
+- **[Msx_gen](https://github.com/ved1beta/msx_gen):** Bot that takes in a video extracts its mood and vibe and generated music based on the video just a curious project learned about music theory and vidoe processing from OpenCV and deploying on AWS 
+# Working on 
 Many in deployment many failed T_T"
 
 - **[v0 clone](https://github.com/ved1beta/v.o_clone):** tried making a v0 clone that generats websited was able to create a backed to get the code from gemini but showing it on frontend and running it in a container was not able to do that (upkilling it right now will make it someday pakka : ) 
