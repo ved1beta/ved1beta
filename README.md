@@ -9,9 +9,9 @@
 
 ## Learning 
 
-- **Triton: ** making custum triton kernals for better optimizations , working on some big kernal projects
-- **Cuda: **  cuda archirecture for better understanding of kernals and triton
-- **Deep Learning: ** comp vision , NLP ect : ) 
+- **Triton:** making custum triton kernals for better optimizations , working on some big kernal projects
+- **Cuda:**  cuda archirecture for better understanding of kernals and triton
+- **Deep Learning:** comp vision , NLP ect : ) 
 
 ## Technical Skills 🛠️
 - **Languages:** Python, C , javascript 
