@@ -6,6 +6,13 @@
 
 🔮 Whether it's teaching machines to see, understand language, or solve complex problems, I'm your go-to person for turning AI dreams into reality! Let's build something amazing together!
 
+
+## Learning 
+
+- **Triton: ** making custum triton kernals for better optimizations , working on some big kernal projects
+- **Cuda: **  cuda archirecture for better understanding of kernals and triton
+- **Deep Learning: ** comp vision , NLP ect : ) 
+
 ## Technical Skills 🛠️
 - **Languages:** Python, C , javascript 
 - **Frameworks & Libraries:** Fast ai , Pytorch , Pandas , Matplotlib
