@@ -1,13 +1,8 @@
-👋 Hi, I'm Ved! I’m🎖️ a Machine Learning engineer focused on harnessing technology to make significant impacts in the tech industry and beyond.
+![image](https://github.com/user-attachments/assets/810bad2c-79db-4733-9a89-51a01f29c3f5)
 
 
-## About Me
-🚀 Young and ambitious developer on a mission to create impact through innovative AI solutions! Currently pursuing Minor in AI from IIT Ropar while diving deep into self-learning adventures.
 
-🔮 Whether it's teaching machines to see, understand language, or solve complex problems, I'm your go-to person for turning AI dreams into reality! Let's build something amazing together!
-
-
-## Learning 
+## Topics I Covered 
 
 - **Triton:** making custum triton kernals for better optimizations , working on some big kernal projects
 - **Cuda:**  cuda archirecture for better understanding of kernals and triton
