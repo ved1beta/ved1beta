@@ -10,7 +10,7 @@
 
 ## Technical Skills 🛠️
 - **Languages:** Python, C , javascript 
-- **Frameworks & Libraries:** Fast ai , Pytorch , Pandas , Matplotlib
+- **Frameworks & Libraries:** Fast ai , Pytorch , Pandas , Matplotlib , triton
 - **Tools & Platforms:** GitHub, Docker, , Vercel, Neovim , Vscode , JupyterNoterbook , Aws
 - **Machine Learning Specialist:** Proficient in statistical analysis, predictive modeling (Regression, Decision Trees, Random Forest), and advanced algorithms (CatBoost, SGD) with strong focus on optimization and accuracy.
 ## Key Projects 📚
