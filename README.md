@@ -22,11 +22,12 @@
 - **[v0 clone](https://github.com/ved1beta/v.o_clone):** made backend of v0 that for given prompt gives back code for website it writes in react and node mainly but you can choose any framework please check out ,
 
 - **[Research-copilot](https://github.com/ved1beta/research-copilot):** working on a chat bot that will help in research and provide relavent links citations and summarization of given paper made with RAG and llama models used vector DB storage nad a=Advanced Rag models 
-- **[Msx_gen](https://github.com/ved1beta/msx_gen):** Bot that takes in a video extracts its mood and vibe and generated music based on the video just a curious project learned about music theory and vidoe processing from OpenCV and deploying on AWS 
+- **[Msx_gen](https://github.com/ved1beta/msx_gen):** Bot that takes in a video extracts its mood and vibe and generated music based on the video just a curious project learned about music theory and vidoe processing from OpenCV and deploying on AWS
+**[Transformer](https://github.com/ved1beta/Transformer):** writing transformer from scratch : ) 
 # Working on 
 Many in deployment many failed T_T"
 
-- **[Transformer](https://github.com/ved1beta/Transformer):** writing transformer from scratch : ) 
+- Triton kernals : writing kernals for self attention and finetuning : )
 
 - **[Freelance work here and there]():**
 ## Leadership & Advocacy 🌟
