@@ -12,7 +12,6 @@
 ### CUDA
 - **[GPU Sanghathan](https://github.com/ved1beta/GPU-sanghathan):** Small scale distributed training of sequential deep learning models, built on Numpy and MPI.
 - **[Cuda writer](https://github.com/ved1beta/Cuda_writer):** writing cuda kernels from scratch vec_add to flash_attention and model implementation from scratch.
-- https://github.com/ved1beta/Triton
 - **[Flash attention](https://github.com/ved1beta/Triton):** Implementation of flash attention in triton 
 ### Machine learning 
 - **[Paligemma-Google](https://github.com/ved1beta/Paligemma):** Implemented paligemma vision language model by google from scratch [paper](https://arxiv.org/pdf/2407.07726)
