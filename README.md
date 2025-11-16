@@ -17,7 +17,7 @@
 
 
 ### Hugging Face
-- **Bitsandbytes** - [Major Fix Params4bit tensor subclass handling(4)
+- **Bitsandbytes** - [Fix Params4bit tensor subclass handling(4)
 ](https://github.com/bitsandbytes-foundation/bitsandbytes/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Amerged+author%3Aved1beta)
 
 - **transformers** - [Minor bug fixes and fetaure additions(3)](https://github.com/huggingface/transformers/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Amerged+author%3Aved1beta)
