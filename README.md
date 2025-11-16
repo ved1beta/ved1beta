@@ -4,7 +4,7 @@
 
 ## Work
 
-- MLPapers implementation - [MLPapers](https://github.com/ved1beta/MLpapers) ,Flash atten 1 2, online softmax , llama2 , ailbi more upcoming ...
+- MLPapers implementation - [MLPapers](https://github.com/ved1beta/MLpapers) everythinf from flash attention to llm.int8 
 - [Quanta](https://github.com/ved1beta/Quanta) : small quantization library : )  
  
 
