@@ -1,26 +1,43 @@
-![image](https://github.com/ved1beta/ved1beta/blob/main/Vedant.png?raw=true)
-## Things I Do: ) 
-- **Triton:** making custom triton kernels for better optimizations, working on some big kernel projects
-- **Cuda:**  cuda architecture for better understanding of kernels and triton
-- **Deep Learning:** comp vision, NLP etc. : ) 
-## Technical Skills 🛠️
-- **Languages:** Python, CUDA, C++ 
-- **Frameworks & Libraries:** Pytorch, Pandas, Matplotlib, triton, Mpi4py
-- **Tools & Platforms:** GitHub, Docker, Vercel, Neovim, Vscode, Jupyter Notebook, Aws
-- **Machine Learning Specialist:** Proficient in statistical analysis, predictive modeling (Regression, Decision Trees, Random Forest), and advanced algorithms (CatBoost, SGD) with strong focus on optimization and accuracy.
-## Key Projects 📚
-### CUDA
-- **[GPU Sanghathan](https://github.com/ved1beta/GPU-sanghathan):** Small scale distributed training of sequential deep learning models, built on Numpy and MPI.
-- **[Cuda writer](https://github.com/ved1beta/Cuda_writer):** writing cuda kernels from scratch vec_add to flash_attention and model implementation from scratch.
-- **[Flash attention](https://github.com/ved1beta/Triton):** Implementation of flash attention in tritonutilization
-### Machine learning 
-- **[Paligemma-Google](https://github.com/ved1beta/Paligemma):** Implemented paligemma vision language model by google from scratch [paper](https://arxiv.org/pdf/2407.07726)
-- **[Transformer](https://github.com/ved1beta/Transformer):** Implemented Transformer language model by Google from scratch [paper](https://arxiv.org/pdf/1706.03762)
-  
-- **[Mixture of Experts](https://github.com/ved1beta/Mixture_of_experts):** Mixture of Experts (MoE) model with a focus on efficient routing and expert 
-- Triton/CUDA kernels in my free time : ) 
-## Connect with Me 📬
-- 🐦 [Twitter](https://twitter.com/ant_vedaya)
-- 📫 [Email](mailto:ved.work2024@gmail.com)
-- 🔗 [LinkedIn](https://www.linkedin.com/in/vednatthote/)
-I'm looking forward to collaborating on projects that are at the intersection of technology and social good. Let's connect! 🌍
+
+
+<img width="1080" height="1350" alt="github1" src="https://github.com/user-attachments/assets/c98829ef-7f73-4cbb-a9ff-c366f30512ae" />
+
+## Work
+
+- MLPapers implementation - [MLPapers](https://github.com/ved1beta/MLpapers) ,Flash atten 1 2, online softmax , llama2 , ailbi more upcoming ...
+- [Quanta](https://github.com/ved1beta/Quanta) : small quantization library : )  
+ 
+
+
+
+## OSS
+
+### Axolot
+- **Axo** - [Everything from feature-request to Core functions(14)](https://github.com/huggingface/accelerate/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Amerged+author%3Aved1beta)
+
+
+### Hugging Face
+- **Bitsandbytes** - [Major Fix Params4bit tensor subclass handling(4)
+](https://github.com/bitsandbytes-foundation/bitsandbytes/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Amerged+author%3Aved1beta)
+
+- **transformers** - [Minor bug fixes and fetaure additions(3)](https://github.com/huggingface/transformers/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Amerged+author%3Aved1beta)
+
+- **accelerate** - [Bug fix and feature additions(3)](https://github.com/huggingface/accelerate/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Amerged+author%3Aved1beta)
+
+### Tinygrad
+- **tinygrad** - [Minor bugs(2)](https://github.com/tinygrad/tinygrad/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Amerged+author%3Aved1beta)
+
+## vllm-project 
+- **llm-compressor** - [Feature requests and Bugs(6)](https://github.com/vllm-project/llm-compressor/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Amerged+author%3Aved1beta)
+
+## Others
+- **unsloth** - [small bug](https://github.com/unslothai/unsloth-zoo/pull/164)
+- **intel**   - [small bug](https://github.com/intel/neural-compressor/pull/2172)
+
+
+## Contact
+-  [Twitter](https://twitter.com/ant_vedaya)
+-  [Email](mailto:ved.work2024@gmail.com)
+-  [LinkedIn](https://www.linkedin.com/in/vednatthote/)
+
+  >just say hi!!! 
