@@ -13,7 +13,7 @@
 ## OSS
 
 ### Axolot
-- **Axo** - [Everything from feature-request to Core functions(14)](https://github.com/huggingface/accelerate/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Amerged+author%3Aved1beta)
+- **Axo** - [Everything from feature-request to Core functions(14)](https://github.com/axolotl-ai-cloud/axolotl/pulls?q=sort%3Aupdated-desc+is%3Apr+author%3Aved1beta+is%3Amerged)
 
 
 ### Hugging Face
