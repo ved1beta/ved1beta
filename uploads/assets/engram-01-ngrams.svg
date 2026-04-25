@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 460" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="460" fill="#0d0d0d"/>
+  <text x="40" y="50" font-family="JetBrains Mono, monospace" font-size="13" fill="#6a6a66" letter-spacing="1">N-GRAMS · SLIDING WINDOWS</text>
+
+  <!-- token row -->
+  <g font-family="Inter, sans-serif" font-size="16" fill="#e8e8e3">
+    <rect x="220" y="100" width="160" height="56" fill="none" stroke="#1f1f1f"/>
+    <text x="300" y="135" text-anchor="middle">this</text>
+    <rect x="400" y="100" width="160" height="56" fill="none" stroke="#1f1f1f"/>
+    <text x="480" y="135" text-anchor="middle">is</text>
+    <rect x="580" y="100" width="160" height="56" fill="none" stroke="#1f1f1f"/>
+    <text x="660" y="135" text-anchor="middle">a</text>
+    <rect x="760" y="100" width="160" height="56" fill="none" stroke="#1f1f1f"/>
+    <text x="840" y="135" text-anchor="middle">sentence</text>
+  </g>
+  <text x="220" y="86" font-family="JetBrains Mono, monospace" font-size="11" fill="#6a6a66" letter-spacing="0.6">TOKENS</text>
+
+  <!-- N=1 row (unigrams) -->
+  <text x="40" y="220" font-family="JetBrains Mono, monospace" font-size="12" fill="#a3e635" letter-spacing="0.6">N = 1</text>
+  <text x="40" y="238" font-family="JetBrains Mono, monospace" font-size="10" fill="#6a6a66">unigrams</text>
+  <g>
+    <rect x="220" y="200" width="160" height="32" fill="#a3e63522" stroke="#a3e63555"/>
+    <rect x="400" y="200" width="160" height="32" fill="#a3e63522" stroke="#a3e63555"/>
+    <rect x="580" y="200" width="160" height="32" fill="#a3e63522" stroke="#a3e63555"/>
+    <rect x="760" y="200" width="160" height="32" fill="#a3e63522" stroke="#a3e63555"/>
+  </g>
+
+  <!-- N=2 row (bigrams) -->
+  <text x="40" y="280" font-family="JetBrains Mono, monospace" font-size="12" fill="#a3e635" letter-spacing="0.6">N = 2</text>
+  <text x="40" y="298" font-family="JetBrains Mono, monospace" font-size="10" fill="#6a6a66">bigrams</text>
+  <g>
+    <rect x="220" y="260" width="340" height="32" fill="#a3e63522" stroke="#a3e63566"/>
+    <text x="390" y="280" font-family="JetBrains Mono, monospace" font-size="10" fill="#a3e635" text-anchor="middle">this · is</text>
+    <rect x="400" y="304" width="340" height="32" fill="#a3e63516" stroke="#a3e63544"/>
+    <text x="570" y="324" font-family="JetBrains Mono, monospace" font-size="10" fill="#a3e635" text-anchor="middle">is · a</text>
+    <rect x="580" y="260" width="340" height="32" fill="#a3e6350f" stroke="#a3e63533"/>
+    <text x="750" y="280" font-family="JetBrains Mono, monospace" font-size="10" fill="#6a6a66" text-anchor="middle">a · sentence</text>
+  </g>
+
+  <!-- N=3 row (trigrams) -->
+  <text x="40" y="380" font-family="JetBrains Mono, monospace" font-size="12" fill="#a3e635" letter-spacing="0.6">N = 3</text>
+  <text x="40" y="398" font-family="JetBrains Mono, monospace" font-size="10" fill="#6a6a66">trigrams</text>
+  <g>
+    <rect x="220" y="360" width="520" height="32" fill="#a3e63522" stroke="#a3e63566"/>
+    <text x="480" y="380" font-family="JetBrains Mono, monospace" font-size="10" fill="#a3e635" text-anchor="middle">this · is · a</text>
+    <rect x="400" y="402" width="520" height="32" fill="#a3e63516" stroke="#a3e63544"/>
+    <text x="660" y="422" font-family="JetBrains Mono, monospace" font-size="10" fill="#a3e635" text-anchor="middle">is · a · sentence</text>
+  </g>
+</svg>

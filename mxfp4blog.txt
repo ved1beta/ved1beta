@@ -1,0 +1,113 @@
+was working on adding mxfp4 support and it traces back a few PRs 
+so quantization is this process where make a bigger model fit in a smaller bucket 
+
+and when some one sets 
+```
+qat:
+  activation_dtype: mxfp4
+  weight_dtype: mxfp4
+  group_size: 32
+```
+
+a user drops these  into axolotl config , runs axolotl train and a llama starts training with simulated 4-bit numerics on a consumer GPU. 
+
+Getting to those three lines took a year of work across three different codebases. 
+this post i will trace back my work for these advancements into each layer of stack
+
+I'm a systems engineer at Axolotl. Over the past year I've contributed to pytorch/ao (the PyTorch-native quantization library), bitsandbytes (the 8-bit optimizer and 4-bit quantization library that almost every QLoRA workflow depends on), and Axolotl itself. MXFP4 QAT is one of the threads that passes through all three. This is the plumbing post I wish had existed when I started.
+
+
+
+lets start with mxfp4
+
+thanks to everyone envolved in OCP we have new set of storage formats call MXFP4 
+ 
+mxfp4 is a 4 bit  floating-point format there are 3 things matter about it 
+
+
+Block size 32. Every 32 consecutive values in a tensor share one scale factor. That's what makes it "microscaling" — scales are local to small blocks, not global to a whole tensor.
+E2M1 element format. Each individual value is 1 sign bit, 2 exponent bits, 1 mantissa bit. That gives you exactly 7 positive representable values — 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0 — plus their negatives and zero. That's it. 16 total values per element, 4 bits.
+UE8M0 shared scale. The block-level scale is an 8-bit unsigned exponent with no mantissa — essentially a power-of-2 multiplier. Cheap to store, cheap to multiply.
+
+The combination is specifically engineered for hardware. Blackwell has native MXFP4 tensor cores. Hopper doesn't, but the format is representable and emulable there with minor overhead. Ampere and earlier emulate it more expensively but can still use it for QAT, where the numerics matter but raw throughput doesn't.
+
+Why MXFP4 and not INT4 or NVFP4? INT4 has worse dynamic range at the same bit-width — you're stuck with a uniform grid of 16 values. NVFP4 is NVIDIA's proprietary variant with better accuracy on their hardware, but it's Blackwell-only and locked to their ecosystem. MXFP4 sits in a hardware-agnostic sweet spot:good enough dynamic range for QAT to recover most of the accuracy loss, standardized by OCP so non-NVIDIA accelerators can implement it, and already native on Blackwell if you have it.
+
+For training, the trick is fake quantization: you don't actually compute in MXFP4. You keep weights and activations in BF16, but before every matmul you quantize-then-dequantize them through the MXFP4 grid, which simulates the numerical behavior without needing a production 4-bit matmul kernel. The model learns to be robust to the quantization noise. When you export for inference later, the resulting checkpoint drops into a real 4-bit serving kernel and performs dramatically better than it would have under post-training quantization alone.
+This fake-quantization trick is the single design decision that makes the entire training-to-serving pipeline possible across three libraries. Hold onto it — it comes back in the reflection at the end.
+
+To make those three lines work, MXFP4 has to be understood by three libraries in a chain
+
+
+pytorch/ao is the PyTorch-native model optimization library. The TorchAO paper frames its mission as "connecting an otherwise fragmented space" — a unified representation of low-precision numerics that flows from pre-training (TorchTitan) through fine-tuning (TorchTune, Axolotl) to serving (HuggingFace, vLLM, SGLang, ExecuTorch). MXFP4 is one of the tensor types in that unified representation.
+
+At the API level, QAT with MXFP4 in pytorch/ao looks like this:
+
+```from torchao.prototype.mx_formats import MXDynamicActivationMXWeightConfig
+from torchao.quantization import quantize_
+from torchao.quantization.qat import QATConfig
+import torch
+
+mx_config = MXDynamicActivationMXWeightConfig(
+    activation_dtype=torch.float4_e2m1fn_x2,
+    weight_dtype=torch.float4_e2m1fn_x2,
+)
+
+# Wrap the model's Linear layers with fake-quantization subclasses.
+quantize_(model, QATConfig(mx_config, step="prepare"))
+
+# ... train as normal ...
+
+# After training, swap the fake-quant subclasses for real MX tensors.
+quantize_(model, QATConfig(mx_config, step="convert"))
+```
+
+
+
+Under the hood, the library represents MXFP4 as a PyTorch tensor subclass. A subclass here is a Python class that inherits from torch.Tensor but overrides specific operations — in this case, matmul. During QAT, the forward pass sees what looks like a normal BF16 tensor, but when it hits a linear layer, the subclass intercepts and performs fake quantization along the matmul path. Gradients flow back through a straight-through estimator.
+The elegance is that the rest of the training loop — the optimizer, the dataloader, the loss function — has no idea it's training a quantized model. The tensor subclass handles everything locally
+
+#3644 my first merge in AO btw > _ <
+
+before torchao.prototype.qat had an NVFP4 fake-quantization path — NVFP4FakeQuantizeConfig and NVFP4FakeQuantizedLinear, sitting in a file called nvfp4.py
+
+ but no MX-family equivalent. MXFP4 and MXFP8 existed only in the inference workflow: MXDynamicActivationMXWeightConfig in torchao/prototype/mx_formats/inference_workflow.py would wrap model weights for serving, but there was no way to train a model with the same numerics. If you wanted QAT with an MX format, you had to wire up the tensor subclass yourself.
+
+The PR adds MXFakeQuantizeConfig and MXFakeQuantizedLinear in a new torchao/prototype/qat/mx.py, structurally mirroring the NVFP4 file next to it. It routes MXFP4 (torch.float4_e2m1fn_x2), MXFP8 E4M3 (torch.float8_e4m3fn), and MXFP8 E5M2 (torch.float8_e5m2) through the existing quantize_ API 
+
+It also wires scaling_mode through MXDynamicActivationMXWeightConfig in the inference workflow so the same config object works for both QAT and PTQ paths.
+ 
+#1860 bits and bytest 
+ Quantizing the model weights is only half the memory story. When you train with Adam you also carry, per parameter, two full-precision floats of momentum and variance — roughly 4× the parameter count sitting in GPU memory on top of the weights. bitsandbytes' 8-bit optimizers compress those buffers to INT8 with block-wise scales, and that's most of why QLoRA-style fine-tuning fits on a consumer GPU at all.
+ 
+There's been a known bug since 2022 where the 8-bit optimizer falls over the moment you combine it with FSDP — PyTorch's distributed sharding system. Issue #89. Four years open. You'd get a RuntimeError: output tensor must have the same type as input tensor from deep inside NCCL, and the workaround the community settled on was: don't use them together.
+
+The actual bug is a shape bug. state_dict() writes a flat per-parameter dict that includes both the quantized momentum/variance buffers (state1, state2) and their block-wise scales (absmax1, absmax2). When FSDP gathers optimizer state across ranks, it descends one level into that dict and tries to gather every tensor it finds as if it shards like the parameter. state1 does. absmax1 doesn't — it's shaped by the block structure of the quantization, not the parameter. FSDP tries to gather it, shapes don't line up, NCCL throws, and the error points you at "type" when the real issue is that this tensor shouldn't be in the collective at all.
+The fix, once I understood the problem, is a nesting trick. Wrap the quantization metadata in a sub-dict under a new key (_FSDP_WRAPPED_QUANT_STATE_KEY, string value "bnb_optimizer_quant_state"). FSDP's gather only descends one level, so it sees one dict value and skips it. load_state_dict() unwraps the sub-dict on the way back in. The tensors are the same before and after the PR. Only their nesting depth changes.
+
+
+The takeaway: this isn't a bitsandbytes bug or an FSDP bug. It's at the interface between them — an assumption each side was free to make because neither documented the contract, and most of systems work is finding the one that doesn't hold at the seam.
+
+Issue #89 closed after four years. Good one to get off the books.
+
+#3375 my fav library btw : )
+
+Axolotl is the user-facing layer. Someone writes a YAML config, Axolotl builds the model and trainer, training runs. MXFP4 QAT support in Axolotl is what turns the pytorch/ao primitive and the bitsandbytes fix into something a person can actually use without knowing either library exists.
+The feature request was issue #3333. The framing was: existing options (int4_weight_only, fp8) either didn't have enough dynamic range or didn't give you 4-bit memory savings. MXFP4 was the missing middle — specifically for models like gpt-oss at 120B+, where 4-bit QAT isn't a nice-to-have, it's the only way the training run fits.
+My PR: add: support mxfp4 axo (#3375)
+The diff is small on purpose. A new mxfp4 member on the TorchAOQuantDType enum. Validation in validate_ao_dtype to accept the string. A guarded from torchao.prototype.qat import MXFakeQuantizeConfig (try/except so Axolotl still loads against older ao builds where the config doesn't exist yet). A branch in get_quantization_config that builds the config with torch.float4_e2m1fn_x2 and block_size=32. Plus an example YAML at examples/llama-3/3b-qat-mxfp4.yaml.
+
+
+
+that was it , i hope this gave you a better understanding of howw things work for a single training run of mxfp4 
+
+
+References
+
+TorchAO paper: arxiv.org/abs/2507.16099
+OCP Microscaling Formats specification: opencompute.org
+pytorch/ao — (prototype) add support for MXFP8 and MXFP4 QAT (#3644)
+bitsandbytes — bug: fix 8bitoptim support with fsdp (#1840)
+Axolotl — add: support mxfp4 axo (#3375)
+Axolotl issue #3333 (MXFP4 QAT feature request): github.com/axolotl-ai-cloud/axolotl/issues/3333
+bitsandbytes issue #89 (8-bit optimizers don't work with FSDP): github.com/bitsandbytes-foundation/bitsandbytes/issues/89

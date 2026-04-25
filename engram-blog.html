@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Engram — Conditional Memory for Transformers — ved1beta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0a0a; --surface: #121212; --border: #1f1f1f;
+    --fg: #e8e8e3; --fg-dim: #b8b8b3; --muted: #6a6a66;
+    --accent: #a3e635;
+    --sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --serif: "Instrument Serif", Georgia, serif;
+  }
+  html, body { margin:0; padding:0; background:var(--bg); color:var(--fg); font-family:var(--sans); }
+  * { box-sizing: border-box; }
+  ::selection { background: color-mix(in oklab, var(--accent) 35%, transparent); color: var(--fg); }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in oklab, var(--accent) 40%, transparent); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 56px 32px 140px; }
+  .topbar { display:flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .6px; text-transform: uppercase; max-width: 1200px; margin: 0 auto; padding: 20px 32px; border-bottom: 1px solid var(--border); }
+  .topbar a { color: var(--fg-dim); border: none; }
+  .topbar a:hover { color: var(--accent); }
+
+  .meta { font-family: var(--mono); font-size: 11.5px; color: var(--muted); letter-spacing: .4px; display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+  .meta .dot { color: #333; }
+
+  h1.title { font-size: 56px; font-weight: 400; letter-spacing: -1.2px; line-height: 1.05; margin: 0; text-wrap: balance; }
+  .dek { font-family: var(--serif); font-style: italic; font-size: 26px; color: var(--fg-dim); line-height: 1.35; margin-top: 18px; text-wrap: pretty; }
+  .byline { margin-top: 36px; font-family: var(--mono); font-size: 12px; color: var(--muted); padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+
+  article p { font-size: 17.5px; line-height: 1.75; color: #d8d8d3; margin: 22px 0; text-wrap: pretty; }
+  article h2 { font-size: 28px; font-weight: 400; letter-spacing: -.4px; margin: 72px 0 4px; line-height: 1.2; }
+  article h2 .num { font-family: var(--mono); font-size: 12px; color: var(--accent); display: block; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+  article h3 { font-size: 20px; font-weight: 500; margin: 44px 0 -6px; color: var(--fg); }
+
+  article ul { padding-left: 22px; }
+  article li { font-size: 17px; line-height: 1.7; color: #d8d8d3; margin: 10px 0; }
+  article li strong { color: var(--fg); font-weight: 500; }
+
+  article code { font-family: var(--mono); font-size: 14.5px; color: var(--accent); background: color-mix(in oklab, var(--accent) 6%, transparent); padding: 1px 6px; border-radius: 3px; }
+  pre { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px 22px; overflow: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.7; color: #d0d0cb; }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+  pre .k { color: var(--accent); }
+  pre .c { color: var(--muted); font-style: italic; }
+
+  blockquote { border-left: 2px solid var(--accent); margin: 28px 0; padding: 4px 0 4px 20px; color: var(--fg-dim); font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.55; }
+  blockquote .src { display: block; font-family: var(--mono); font-style: normal; font-size: 11.5px; color: var(--muted); letter-spacing: .4px; margin-top: 10px; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 72px 0; }
+
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .8px; color: var(--accent); text-transform: uppercase; margin-top: 48px; }
+  .lede { font-size: 20px; color: var(--fg); line-height: 1.6; margin-top: 30px; }
+  .endnote { margin-top: 120px; padding-top: 36px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+  .tag-row { display:flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-family: var(--mono); font-size: 10.5px; color: var(--muted); border: 1px solid var(--border); padding: 3px 8px; border-radius: 3px; letter-spacing: .5px; text-transform: uppercase; }
+  .ornament { display:flex; justify-content: center; margin: 48px 0; color: var(--muted); letter-spacing: 8px; font-family: var(--mono); font-size: 12px; }
+
+  /* figures */
+  figure { margin: 56px 0; }
+  figure.breakout { width: calc(100% + 160px); margin-left: -80px; margin-right: -80px; }
+  figure.fullbleed { width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); }
+  figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 2px; background: var(--surface); }
+  figure.fullbleed img { border-left: none; border-right: none; border-radius: 0; }
+  figcaption { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 14px; letter-spacing: .3px; line-height: 1.6; display: flex; gap: 14px; }
+  figcaption .fignum { color: var(--accent); white-space: nowrap; }
+  @media (max-width: 900px) { figure.breakout, figure.fullbleed { width: 100%; margin-left: 0; margin-right: 0; } }
+
+  /* two-column comparison */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 28px 0; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+  .col-box { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; }
+  .col-box .col-label { font-family: var(--mono); font-size: 10.5px; color: var(--accent); letter-spacing: .8px; text-transform: uppercase; margin-bottom: 10px; }
+  .col-box p { margin: 0; font-size: 15px; line-height: 1.65; color: var(--fg-dim); }
+
+  /* aside / callout */
+  .aside { background: var(--surface); border: 1px solid var(--border); border-left: 2px solid var(--accent); border-radius: 4px; padding: 16px 20px; margin: 32px 0; font-size: 15px; color: var(--fg-dim); line-height: 1.7; }
+  .aside strong { color: var(--fg); font-weight: 500; }
+
+  /* formula block */
+  .formula { text-align: center; font-family: var(--mono); font-size: 14px; color: var(--fg); margin: 26px 0; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; }
+  .formula sub { font-size: 11px; color: var(--fg-dim); }
+
+  /* numbered steps */
+  .steps { list-style: none; padding: 0; margin: 28px 0; counter-reset: step; }
+  .steps li { counter-increment: step; display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-top: 1px solid var(--border); }
+  .steps li:last-child { border-bottom: 1px solid var(--border); }
+  .steps li::before { content: counter(step, decimal-leading-zero); font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: .5px; min-width: 28px; padding-top: 3px; }
+  .steps li p { margin: 0; font-size: 15.5px; color: var(--fg-dim); line-height: 1.65; }
+  .steps li strong { color: var(--fg); font-weight: 500; }
+
+  /* results table */
+  .results { width: 100%; border-collapse: collapse; margin: 32px 0; font-family: var(--mono); font-size: 13px; }
+  .results th { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 400; font-size: 10.5px; letter-spacing: .8px; text-transform: uppercase; }
+  .results td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--fg-dim); }
+  .results tr:last-child td { border-bottom: none; }
+  .results .pos { color: var(--accent); }
+  .results td:first-child { color: var(--fg); }
+
+  .author-card { display: flex; align-items: center; gap: 14px; margin-top: 32px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+  .author-card img { width: 44px; height: 44px; border-radius: 999px; object-fit: cover; border: 1px solid var(--border); filter: grayscale(0.15) contrast(1.02); }
+  .author-card .info { font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .author-card .info a { color: var(--fg-dim); border: none; }
+  .author-card .info a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="Portfolio.html">← ved1beta</a>
+  <div>essay · 2026</div>
+</div>
+
+<div class="wrap">
+  <article>
+    <div class="meta">
+      <span>2026-04-22</span><span class="dot">·</span>
+      <span>12 min read</span><span class="dot">·</span>
+      <span>Architecture deep dive</span><span class="dot">·</span>
+      <span class="tag-row"><span class="tag">deepseek</span><span class="tag">memory</span><span class="tag">architecture</span></span>
+    </div>
+
+    <h1 class="title">Engram: Conditional Memory via Scalable Lookup</h1>
+    <div class="dek">DeepSeek&rsquo;s answer to the second sparsity problem — the one MoE didn&rsquo;t touch.</div>
+    <div class="author-card">
+      <img src="assets/headshot.jpeg" alt="Ved" />
+      <div class="info">
+        <div>by <a href="Portfolio.html">Ved</a> · systems engineer at Axolotl AI</div>
+        <div>github / <a href="https://github.com/ved1beta">ved1beta</a> · x / @ant_vedaya</div>
+      </div>
+    </div>
+
+    <p class="lede">DeepSeek papers are some of the most structurally interesting pieces of modern ML literature — they tend to identify a flaw the rest of the field has accepted as background noise, then engineer the minimal fix for exactly that flaw. Engram is one of those papers.</p>
+
+    <p>Modern transformers face a stubborn bottleneck as they scale: <strong>memory</strong>. Not GPU memory — the model&rsquo;s ability to <em>retrieve</em> what it knows. The mechanism we have, attention plus feed-forward layers, has no native primitive for knowledge lookup. To recall a static fact, the model has to simulate retrieval through computation. Engram replaces that simulation with a real lookup table.</p>
+
+    <blockquote>
+      &ldquo;Transformers lack a native primitive for knowledge lookup, forcing them to inefficiently simulate retrieval through computation.&rdquo;
+      <span class="src">— Engram paper, abstract</span>
+    </blockquote>
+
+    <div class="ornament">· · ·</div>
+
+    <h2><span class="num">§ 01</span>Two sparsity problems, one solved</h2>
+
+    <p>Beneath the standard transformer recipe sit two distinct sparsity problems. Mixture-of-Experts addressed one of them and became the de facto frontier-model architecture. The other was left structurally unaddressed.</p>
+
+    <div class="two-col">
+      <div class="col-box">
+        <div class="col-label">Compute sparsity — solved by MoE</div>
+        <p>At any moment, only a fraction of model parameters need to fire. MoE said &ldquo;not every expert needs to activate for every token,&rdquo; routed tokens to the relevant experts, and left the rest idle. Problem one closed.</p>
+      </div>
+      <div class="col-box">
+        <div class="col-label">Memory sparsity — left open</div>
+        <p>At any moment, only a fraction of stored knowledge is actually retrieved. But that knowledge is buried in weight matrices. To recall &ldquo;Alexander the Great,&rdquo; the model spends multiple early layers reconstructing what could have been a single lookup.</p>
+      </div>
+    </div>
+
+    <p>Engram is the answer to the second problem. The diagnosis is precise: <strong>static knowledge is being reconstructed through dynamic computation.</strong> The fix is also precise: a sharded, deterministic, differentiable lookup table that sits in front of attention.</p>
+
+    <h2><span class="num">§ 02</span>Before Engram — what an N-gram is</h2>
+
+    <p>The lookup keys in Engram are N-grams. An N-gram is just a contiguous sequence of N tokens — instead of looking at one token in isolation, you look at pairs, triples, or longer windows together.</p>
+
+    <figure class="breakout">
+      <img src="assets/ing2.png" alt="N-grams by NLP: unigrams (N=1), bigrams (N=2), trigrams (N=3) over the sentence This is a Sentence" />
+      <figcaption><span class="fignum">fig. 01</span><span>N=1 → unigrams, N=2 → bigrams, N=3 → trigrams. Engram uses bigrams and trigrams as memory keys.</span></figcaption>
+    </figure>
+
+    <p>The insight is plain. <strong>&ldquo;Alexander&rdquo;</strong> alone is ambiguous. <strong>&ldquo;Alexander the Great&rdquo;</strong> is a fixed, recurring concept — and any model that sees this trigram should retrieve the same knowledge every time, regardless of context. That is exactly what a lookup table does. Hash the N-gram to an index, retrieve the stored embedding, inject it into the hidden state. No attention. No multi-layer reconstruction. O(1).</p>
+
+    <div class="aside">
+      <strong>Why not just grow the FFN?</strong> Resolving a multi-token entity through pure computation consumes early attention and FFN depth — sequential capacity spent on a static reconstruction. Engram offloads that work to a direct lookup, freeing depth for genuine reasoning.
+    </div>
+
+    <h2><span class="num">§ 03</span>The Engram architecture</h2>
+
+    <p>Engram sits <em>before</em> both attention and MoE inside selected transformer layers. When a token sequence arrives, the module runs two phases: <strong>retrieval</strong> and <strong>fusion</strong>.</p>
+
+    <figure class="breakout">
+      <img src="assets/paper_fig1.png" alt="Figure 1 from the Engram paper — transformer block with Engram firing first, attention, then MoE; zoom-in showing 2-gram and 3-gram embedding lookup, concat, linear projections, scaled dot-product gating, and a short conv" />
+      <figcaption><span class="fignum">fig. 02</span><span>Engram fires first, then attention, then MoE. Inside the module: 2-gram and 3-gram embeddings are hashed and retrieved, concatenated, projected, gated against the current hidden state, then refined by a short causal conv before the residual add.</span></figcaption>
+    </figure>
+
+    <h3>Sparse retrieval via hashed N-grams</h3>
+
+    <p>Before lookup, raw token IDs pass through a <strong>tokenizer compression</strong> step. Subword tokenizers assign different IDs to semantically equivalent forms — <code>"Apple"</code> vs <code>"apple"</code>, leading-space variants, and so on. The compression projects all of these onto canonical IDs, achieving roughly a 23% reduction in effective vocabulary. Fewer distinct N-gram keys means denser, better-trained embedding rows.</p>
+
+    <p>With compressed IDs in hand, the module computes N-gram hashes using <strong>multi-head hashing</strong>. For each N-gram order (bigram, trigram) and each of K heads, a deterministic multiplicative-XOR function maps the context to an index inside a prime-sized embedding table:</p>
+
+    <div class="formula">z<sub>t,n,k</sub> = φ<sub>n,k</sub>(g<sub>t,n</sub>),&nbsp;&nbsp;&nbsp; e<sub>t,n,k</sub> = E<sub>n,k</sub>[ z<sub>t,n,k</sub> ]</div>
+
+    <p>Each head uses a <strong>unique prime modulus</strong> as its table size. This is the key design call: if two heads shared a modulus, the same N-gram would always hash to the same bucket across them and the heads would be redundant. Distinct primes give statistically independent hash spaces. The retrieved memory is the concatenation across orders and heads:</p>
+
+    <div class="formula">e<sub>t</sub> = concat<sub>n=2..N, k=1..K</sub> e<sub>t,n,k</sub></div>
+
+    <h3>Context-aware gating</h3>
+
+    <p>The retrieved embedding <strong>e<sub>t</sub></strong> is a static, context-independent prior. It captures what the model knows about this N-gram in general — not whether that knowledge is relevant <em>here</em>. A context-aware gate resolves that.</p>
+
+    <p>The hidden state acts as a dynamic <strong>Query</strong> (it has already passed through earlier attention layers and carries global context). The retrieved memory acts as the source of both <strong>Key and Value</strong>. A scalar gate is computed as:</p>
+
+    <div class="formula">α<sub>t</sub> = σ( RMSNorm(h<sub>t</sub>)<sup>⊤</sup> RMSNorm(k<sub>t</sub>) / √d )</div>
+
+    <p>The gated output is <code>v&#771;<sub>t</sub> = α<sub>t</sub> · v<sub>t</sub></code>. If retrieved memory contradicts the current context, the gate decays toward zero and the lookup is suppressed. If it aligns, it passes through at full strength. Semantic alignment, enforced at the module level.</p>
+
+    <p>Finally, a <strong>short dilated depthwise causal convolution</strong> refines the gated output. With kernel size 4 and dilation set to the max N-gram order, it sees positions <code>t, t−3, t−6, t−9</code> — capturing repeating sub-word patterns spaced at N-gram boundaries. Critically, the conv is <strong>zero-initialised</strong>: Engram contributes nothing at initialisation, which makes it safe to drop into a pretrained model without disturbing existing representations. Training gradually switches it on.</p>
+
+    <h2><span class="num">§ 04</span>System implementation</h2>
+
+    <p>A 130k-token vocabulary with bigrams and trigrams yields a table with hundreds of millions to billions of rows. It cannot live on a single GPU. The paper&rsquo;s solution is to shard the table across all available GPUs and use <strong>All-to-All</strong> communication to route each lookup to the device that owns it.</p>
+
+    <figure class="breakout">
+      <img src="assets/paper_fig2.png" alt="Figure 2 from the Engram paper — (a) training with All-to-All across sharded GPUs, (b) inference with tables offloaded to host memory and asynchronous prefetching" />
+      <figcaption><span class="fignum">fig. 03</span><span>(a) Training: the table is sharded across GPUs; All-to-All routes ID requests to the owning device and returns embeddings. (b) Inference: tables offload to host memory; deterministic hashing lets the host prefetch the next batch&rsquo;s rows while the GPU runs the current batch — overlap with &lt;3% overhead.</span></figcaption>
+    </figure>
+
+    <p>The All-to-All protocol runs in three rounds. First, each rank tells every other rank how many IDs it is sending. Second, the IDs are scattered — rank <em>r</em> sends each ID to the rank that owns the corresponding shard. Third, each rank does a local lookup, then scatters the resulting vectors back to the requesters. A sort-by-owner-rank and subsequent unsort keep the output in original query order, fully differentiable.</p>
+
+    <div class="aside">
+      <strong>Training vs inference asymmetry.</strong> During training the table lives on GPU memory, split across ranks. During inference, the entire table is offloaded to CPU host memory. Because Engram&rsquo;s hashing is deterministic, the system knows exactly which rows the next batch will need before the forward pass starts — so the host prefetches in parallel with compute and hides the transfer entirely.
+    </div>
+
+    <h2><span class="num">§ 05</span>Multi-branch integration</h2>
+
+    <p>The DeepSeek backbone is not a single-stream transformer. It uses a <strong>multi-branch (mHC)</strong> architecture where the residual stream expands into M parallel branches. Engram adapts via a parameter-sharing strategy: one shared Value projection <code>W<sub>V</sub></code> across all M branches, but M distinct Key projections <code>{W<sub>K</sub><sup>(m)</sup>}</code> for branch-specific gating. Each branch gates the same retrieved memory vector independently, enabling fine-grained, branch-aware injection.</p>
+
+    <p>This also lets the linear projections fuse into a single dense FP8 matmul — one <code>W<sub>V</sub></code> stacked with M <code>W<sub>K</sub></code> — maximising GPU utilisation with negligible overhead.</p>
+
+    <h2><span class="num">§ 06</span>Distributed training</h2>
+
+    <p>The full model trains with <strong>DDP</strong> wrapping the entire network, but the optimiser is split into two groups, because embeddings and the backbone have fundamentally different gradient structures.</p>
+
+    <p>Backbone parameters receive <strong>dense gradients</strong>: every parameter is updated on every step. They benefit from weight decay and standard AdamW at <code>lr = 4e-4</code>.</p>
+
+    <p>Embedding parameters receive <strong>sparse gradients</strong>: only the rows touched by tokens in the current batch get updated. Most rows see zero gradient on any given step. Weight decay on sparse embeddings is actively harmful — unused rows would decay toward zero even though they were simply never queried. The fix is plain Adam with no weight decay, and a <strong>5× higher learning rate</strong> (<code>lr = 20e-4</code>) to compensate for infrequent updates.</p>
+
+    <ol class="steps">
+      <li><p><strong>DistributedSampler</strong> assigns disjoint token batches to each rank — every rank sees different data.</p></li>
+      <li><p><strong>Forward pass.</strong> DDP runs in sync; inside the Engram module, All-to-All fetches embeddings across shards.</p></li>
+      <li><p><strong>Backward pass.</strong> DDP all-reduces backbone gradients across ranks. Embedding gradients stay local — each rank only accumulated gradients for the rows it owns.</p></li>
+      <li><p><strong>Optimiser step.</strong> AdamW updates the backbone, plain Adam updates embeddings. Independent groups, no interference.</p></li>
+    </ol>
+
+    <h2><span class="num">§ 07</span>What it achieves</h2>
+
+    <p>The paper scales Engram to 27B parameters and evaluates against a strictly iso-parameter, iso-FLOPs MoE baseline. The gains aren&rsquo;t limited to knowledge-heavy benchmarks — they show up across reasoning and code too.</p>
+
+    <table class="results">
+      <thead>
+        <tr><th>benchmark</th><th>category</th><th>moe-27B</th><th>engram-27B</th><th>Δ</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>MMLU</td><td>knowledge</td><td>57.4</td><td>60.4</td><td class="pos">+3.0</td></tr>
+        <tr><td>MMLU-Redux</td><td>knowledge</td><td>60.6</td><td>64.0</td><td class="pos">+3.4</td></tr>
+        <tr><td>CMMLU</td><td>knowledge</td><td>57.9</td><td>61.9</td><td class="pos">+4.0</td></tr>
+        <tr><td>ARC-Challenge</td><td>reasoning</td><td>70.1</td><td>73.8</td><td class="pos">+3.7</td></tr>
+        <tr><td>BBH</td><td>reasoning</td><td>50.9</td><td>55.9</td><td class="pos">+5.0</td></tr>
+        <tr><td>DROP</td><td>reading</td><td>55.7</td><td>59.0</td><td class="pos">+3.3</td></tr>
+        <tr><td>HumanEval</td><td>code</td><td>37.8</td><td>40.8</td><td class="pos">+3.0</td></tr>
+        <tr><td>GSM8K</td><td>math</td><td>58.4</td><td>60.6</td><td class="pos">+2.2</td></tr>
+        <tr><td>MATH</td><td>math</td><td>28.3</td><td>30.7</td><td class="pos">+2.4</td></tr>
+        <tr><td>Multi-Query NIAH</td><td>long context</td><td>84.2</td><td>97.0</td><td class="pos">+12.8</td></tr>
+      </tbody>
+    </table>
+
+    <p>The long-context result is the most striking. By delegating local token dependencies to deterministic lookups, attention capacity is freed for genuinely global patterns. The model stops wasting early-layer depth reconstructing static knowledge and can attend to what actually matters.</p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2><span class="num">§ 08</span>Why this matters</h2>
+
+    <p>MoE solved compute sparsity. Engram solves memory sparsity. Together, they address both structural inefficiencies of the vanilla transformer — not by scaling the same thing harder, but by recognising that the two tasks inside a language model (compositional reasoning and knowledge retrieval) have fundamentally different computational profiles and deserve different primitives.</p>
+
+    <p>What makes the paper worth reading carefully is the precision of the diagnosis. There is no vague &ldquo;augmented memory&rdquo; rhetoric. The flaw is named — <em>static knowledge reconstructed through dynamic computation</em> — and the fix is engineered for exactly that flaw. A lookup table. Sharded. Deterministic. O(1). Differentiable.</p>
+
+    <blockquote>
+      &ldquo;We envision conditional memory as an indispensable modeling primitive for next-generation sparse models.&rdquo;
+      <span class="src">— Engram paper</span>
+    </blockquote>
+
+    <div class="endnote">
+      <div>— ved · april 2026 · <a href="Portfolio.html">back to portfolio</a></div>
+      <div>find me at x/@ant_vedaya · github/ved1beta · ved@axolotl.ai</div>
+      <div style="margin-top: 14px; color: #444;">paper: arXiv:2601.07372 · DeepSeek-AI &amp; Peking University</div>
+    </div>
+  </article>
+</div>
+
+</body>
+</html>

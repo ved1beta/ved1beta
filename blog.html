@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MXFP4, End-to-End — ved1beta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0a0a; --surface: #121212; --border: #1f1f1f;
+    --fg: #e8e8e3; --fg-dim: #b8b8b3; --muted: #6a6a66;
+    --accent: #a3e635;
+    --sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --serif: "Instrument Serif", Georgia, serif;
+  }
+  html, body { margin:0; padding:0; background:var(--bg); color:var(--fg); font-family:var(--sans); }
+  * { box-sizing: border-box; }
+  ::selection { background: color-mix(in oklab, var(--accent) 35%, transparent); color: var(--fg); }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in oklab, var(--accent) 40%, transparent); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 56px 32px 140px; }
+  .topbar { display:flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .6px; text-transform: uppercase; max-width: 1200px; margin: 0 auto; padding: 20px 32px; border-bottom: 1px solid var(--border); }
+  .topbar a { color: var(--fg-dim); border: none; }
+  .topbar a:hover { color: var(--accent); }
+
+  .meta { font-family: var(--mono); font-size: 11.5px; color: var(--muted); letter-spacing: .4px; display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+  .meta .dot { color: #333; }
+
+  h1.title { font-size: 56px; font-weight: 400; letter-spacing: -1.2px; line-height: 1.05; margin: 0; text-wrap: balance; }
+  .dek { font-family: var(--serif); font-style: italic; font-size: 26px; color: var(--fg-dim); line-height: 1.35; margin-top: 18px; text-wrap: pretty; }
+  .byline { margin-top: 36px; font-family: var(--mono); font-size: 12px; color: var(--muted); padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+
+  article p { font-size: 17.5px; line-height: 1.75; color: #d8d8d3; margin: 22px 0; text-wrap: pretty; }
+  article h2 { font-size: 28px; font-weight: 400; letter-spacing: -.4px; margin: 72px 0 4px; line-height: 1.2; }
+  article h2 .num { font-family: var(--mono); font-size: 12px; color: var(--accent); display: block; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+  article h3 { font-size: 20px; font-weight: 500; margin: 44px 0 -6px; color: var(--fg); }
+  article h3 .pr { font-family: var(--mono); font-size: 11.5px; color: var(--accent); letter-spacing: .5px; margin-left: 4px; }
+
+  article ul { padding-left: 22px; }
+  article li { font-size: 17px; line-height: 1.7; color: #d8d8d3; margin: 10px 0; }
+  article li strong { color: var(--fg); font-weight: 500; }
+
+  article code { font-family: var(--mono); font-size: 14.5px; color: var(--accent); background: color-mix(in oklab, var(--accent) 6%, transparent); padding: 1px 6px; border-radius: 3px; }
+  pre { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px 22px; overflow: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.7; color: #d0d0cb; }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+  pre .k { color: var(--accent); }
+  pre .c { color: var(--muted); font-style: italic; }
+
+  blockquote { border-left: 2px solid var(--accent); margin: 28px 0; padding: 4px 0 4px 20px; color: var(--fg-dim); font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.55; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 72px 0; }
+
+  .footnote { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 10px; line-height: 1.65; }
+
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .8px; color: var(--accent); text-transform: uppercase; margin-top: 48px; }
+
+  .lede { font-size: 20px; color: var(--fg); line-height: 1.6; margin-top: 30px; }
+  .lede::first-line { letter-spacing: .2px; }
+
+  .endnote { margin-top: 120px; padding-top: 36px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+
+  .tag-row { display:flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-family: var(--mono); font-size: 10.5px; color: var(--muted); border: 1px solid var(--border); padding: 3px 8px; border-radius: 3px; letter-spacing: .5px; text-transform: uppercase; }
+
+  .ornament { display:flex; justify-content: center; margin: 48px 0; color: var(--muted); letter-spacing: 8px; font-family: var(--mono); font-size: 12px; }
+
+  /* figures */
+  figure { margin: 56px 0; }
+  figure.breakout { width: calc(100% + 160px); margin-left: -80px; margin-right: -80px; }
+  figure.fullbleed { width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); }
+  figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 2px; }
+  figure.fullbleed img { border-left: none; border-right: none; border-radius: 0; }
+  figcaption { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 14px; letter-spacing: .3px; line-height: 1.6; display: flex; gap: 14px; }
+  figcaption .fignum { color: var(--accent); white-space: nowrap; }
+  @media (max-width: 900px) { figure.breakout, figure.fullbleed { width: 100%; margin-left: 0; margin-right: 0; } }
+
+  .author-card { display: flex; align-items: center; gap: 14px; margin-top: 32px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+  .author-card img { width: 44px; height: 44px; border-radius: 999px; object-fit: cover; border: 1px solid var(--border); filter: grayscale(0.15) contrast(1.02); }
+  .author-card .info { font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .author-card .info a { color: var(--fg-dim); border: none; }
+  .author-card .info a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="Portfolio.html">← ved1beta</a>
+  <div>essay · 2026</div>
+</div>
+
+<div class="wrap">
+  <article>
+    <div class="meta">
+      <span>2026-04-18</span><span class="dot">·</span>
+      <span>14 min read</span><span class="dot">·</span>
+      <span>Draft v2</span><span class="dot">·</span>
+      <span class="tag-row"><span class="tag">quantization</span><span class="tag">qat</span><span class="tag">systems</span></span>
+    </div>
+
+    <h1 class="title">MXFP4, End-to-End: How a 4-bit Recipe Travels from pytorch/ao to Axolotl</h1>
+    <div class="dek">Three lines of YAML. A year of plumbing. The trace between them.</div>
+    <div class="author-card">
+      <img src="assets/headshot.jpeg" alt="Ved" />
+      <div class="info">
+        <div>by <a href="Portfolio.html">Ved</a> · systems engineer at Axolotl AI</div>
+        <div>github / <a href="https://github.com/ved1beta">ved1beta</a> · x / @ant_vedaya</div>
+      </div>
+    </div>
+
+    <p class="lede">Three lines in a YAML file:</p>
+
+<pre><code><span class="k">qat:</span>
+  activation_dtype: <span class="k">mxfp4</span>
+  weight_dtype:     <span class="k">mxfp4</span>
+  group_size:       32</code></pre>
+
+    <p>A user drops these into an Axolotl config, runs <code>axolotl train</code>, and a Llama starts training with simulated 4-bit numerics on a consumer GPU. No custom kernels. No hand-rolled quantization loop. Just three lines, and everything downstream of them works.</p>
+
+    <p>Getting to those three lines took about a year of work across three different codebases. This post is the trace of what happens between them and the GPU — and what I learned while shipping PRs into each layer of the stack.</p>
+
+    <p>I&rsquo;m a systems engineer at Axolotl. Over the past year I&rsquo;ve contributed to <strong>pytorch/ao</strong> (the PyTorch-native quantization library), <strong>bitsandbytes</strong> (the 8-bit optimizer and 4-bit quantization library that almost every QLoRA workflow depends on), and <strong>Axolotl</strong> itself. MXFP4 QAT is one of the threads that passes through all three. This is the plumbing post I wish had existed when I started.</p>
+
+    <figure class="breakout">
+      <img src="assets/blog-01-mxfp4-blocks.svg" alt="MXFP4 block structure" />
+      <figcaption><span class="fignum">fig. 01</span><span>microscaling block layout — every 32 consecutive values share one UE8M0 scale. 7 positive E2M1 values plus negatives and zero.</span></figcaption>
+    </figure>
+
+    <div class="ornament">· · ·</div>
+
+    <h2><span class="num">§ 01</span>What MXFP4 actually is</h2>
+
+    <p>MXFP4 is a 4-bit floating-point format standardized by the Open Compute Project as part of the microscaling (MX) family. Three things matter about it:</p>
+
+    <ul>
+      <li><strong>Block size 32.</strong> Every 32 consecutive values in a tensor share one scale factor. That&rsquo;s what makes it &ldquo;microscaling&rdquo; — scales are local to small blocks, not global to a whole tensor.</li>
+      <li><strong>E2M1 element format.</strong> Each value is 1 sign bit, 2 exponent bits, 1 mantissa bit. That gives you exactly 7 positive representable values — <code>0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0</code> — plus their negatives and zero. 16 total values per element, 4 bits.</li>
+      <li><strong>UE8M0 shared scale.</strong> The block-level scale is an 8-bit unsigned exponent with no mantissa — essentially a power-of-2 multiplier. Cheap to store, cheap to multiply.</li>
+    </ul>
+
+    <p>The combination is engineered for hardware. Blackwell has native MXFP4 tensor cores. Hopper doesn&rsquo;t, but the format is emulable there with minor overhead. Ampere and earlier emulate it more expensively but can still use it for QAT, where the numerics matter but raw throughput doesn&rsquo;t.</p>
+
+    <p>For training, the trick is <strong>fake quantization</strong>: you don&rsquo;t actually compute in MXFP4. You keep weights and activations in BF16, but before every matmul you quantize-then-dequantize them through the MXFP4 grid, which simulates the numerical behavior without needing a production 4-bit matmul kernel. The model learns to be robust to the quantization noise.</p>
+
+    <blockquote>This fake-quantization trick is the single design decision that makes the entire training-to-serving pipeline possible across three libraries. Hold onto it — it comes back at the end.</blockquote>
+
+    <figure class="breakout">
+      <img src="assets/blog-02-stack.svg" alt="Stack trace from YAML to GPU" />
+      <figcaption><span class="fignum">fig. 02</span><span>the path from three YAML lines to a GPU kernel; each arrow is a library boundary with its own contract.</span></figcaption>
+    </figure>
+
+    <h2><span class="num">§ 02</span>Layer 1 — pytorch/ao as the primitive</h2>
+
+    <p>pytorch/ao is the PyTorch-native model optimization library. The TorchAO paper frames its mission as &ldquo;connecting an otherwise fragmented space&rdquo; — a unified representation of low-precision numerics that flows from pre-training through fine-tuning to serving. MXFP4 is one of the tensor types in that unified representation.</p>
+
+    <p>At the API level, QAT with MXFP4 in pytorch/ao looks like this:</p>
+
+<pre><code><span class="c"># wrap the model&rsquo;s Linear layers with fake-quant subclasses</span>
+quantize_(model, QATConfig(mx_config, step=<span class="k">"prepare"</span>))
+
+<span class="c"># ... train as normal ...</span>
+
+<span class="c"># swap fake-quant subclasses for real MX tensors</span>
+quantize_(model, QATConfig(mx_config, step=<span class="k">"convert"</span>))</code></pre>
+
+    <p>Under the hood, MXFP4 is a PyTorch <strong>tensor subclass</strong>. The subclass intercepts matmul and performs fake quantization along the path; gradients flow back through a straight-through estimator. The elegance is that the optimizer, the dataloader, and the loss function have no idea they&rsquo;re training a quantized model.</p>
+
+    <h3>PR: <em>add support for MXFP8 and MXFP4 QAT</em> <span class="pr">pytorch/ao#3644</span></h3>
+
+    <p>Before this PR, <code>torchao.prototype.qat</code> had an NVFP4 fake-quantization path but no MX-family equivalent. MXFP4 and MXFP8 existed only in the inference workflow. If you wanted QAT with an MX format, you had to wire up the tensor subclass yourself.</p>
+
+    <p>The PR adds <code>MXFakeQuantizeConfig</code> and <code>MXFakeQuantizedLinear</code> in a new <code>mx.py</code>, structurally mirroring the NVFP4 file next to it. It routes MXFP4, MXFP8 E4M3, and MXFP8 E5M2 through the existing <code>quantize_</code> API with block size 32.</p>
+
+    <p>The first version I submitted got two things wrong that I didn&rsquo;t see until review. The smaller: I&rsquo;d called the element-dtype field <code>elem_dtype</code>; the rest of ao calls it <code>dtype</code>. The larger: my initial <code>MXFakeQuantizeConfig</code> stored <code>scaling_mode</code> and <code>kernel_preference</code> as hardcoded constants instead of inheriting from the base config. It worked, but it wasn&rsquo;t a proper citizen of ao&rsquo;s config hierarchy. The rewrite — <em>&ldquo;scaling_mode and kernel_preference pass from base&rdquo;</em> — is where the config stopped being a special case and started composing with the library.</p>
+
+    <p>The other foundational catch was a missing equivalence test between QAT prepare and PTQ forward. The resulting <code>test_quantize_api_mx</code> asserts <code>target_prepare_sqnr=float("inf")</code> — QAT and PTQ forward must match exactly, because they share kernels. That test is what lets Axolotl downstream trust that <code>step="prepare"</code> and <code>step="convert"</code> produce numerically compatible outputs.</p>
+
+    <figure class="breakout">
+      <img src="assets/blog-03-loss.svg" alt="Training loss curve — BF16 vs MXFP4 QAT" />
+      <figcaption><span class="fignum">fig. 03</span><span>QAT loss curve tracks BF16 baseline within ~2% at convergence. The 4-bit noise becomes part of what the model learns to be robust to.</span></figcaption>
+    </figure>
+
+    <h2><span class="num">§ 03</span>Layer 2 — bitsandbytes and the optimizer problem</h2>
+
+    <p>Quantization discussions focus on weights and activations. But a transformer being trained has a third large memory consumer: <strong>optimizer state</strong>. For Adam on <em>N</em> parameters, you carry roughly 2<em>N</em> floats of momentum and variance, plus <em>N</em> floats of parameters, plus <em>N</em> of gradients. 4× the parameter count in memory during training.</p>
+
+    <p>bitsandbytes&rsquo; 8-bit optimizers compress momentum and variance from FP32 to INT8 with block-wise dequantization — roughly 4× less optimizer memory. Combined with QLoRA-style 4-bit weights, this is how finetuning 70B models on consumer GPUs became possible.</p>
+
+    <p>But there&rsquo;s a seam.</p>
+
+    <p>When you add FSDP into the mix, optimizer state has to be split across ranks. FSDP&rsquo;s collectives expect one tensor per parameter, shaped like that parameter. bitsandbytes&rsquo; 8-bit optimizer stored more than that per parameter. The failure has been known since 2022 — issue <code>#89</code>, <em>8-bit optimizers don&rsquo;t work with FSDP</em>. For years the workaround was to not combine the two.</p>
+
+    <h3>PR: <em>bug: fix 8bitoptim support with fsdp</em> <span class="pr">bnb#1840 · v0.49.2</span></h3>
+
+    <p>The concrete path is <code>Optimizer8bit.state_dict()</code>. For every parameter, it wrote a flat dict containing everything that parameter&rsquo;s optimizer needed: <code>state1</code>, <code>state2</code> (momentum and variance), plus <code>absmax1</code>, <code>absmax2</code>, and related metadata.</p>
+
+    <p>FSDP&rsquo;s <code>full_optim_state_dict</code> walks that structure across ranks, descends one level, and treats every tensor it finds as something to gather as if it shards like the parameter. <code>state1</code> and <code>state2</code> do. <code>absmax1</code> doesn&rsquo;t — it&rsquo;s shaped by the block structure of the quantized buffer, not the parameter. FSDP tries to gather it, the shapes don&rsquo;t line up across ranks, and you get <code>RuntimeError: output tensor must have the same type as input tensor</code> from deep inside NCCL.</p>
+
+    <p>The fix is a nesting trick. <code>state_dict()</code> now wraps all quantization-specific tensors in a sub-dict under a new constant, <code>_FSDP_WRAPPED_QUANT_STATE_KEY</code>. FSDP&rsquo;s gather walks the outer dict, sees one value that&rsquo;s itself a dict, and because the gather only descends one level, it ignores the sub-dict&rsquo;s contents. <code>load_state_dict()</code> transparently unwraps on the way back in.</p>
+
+    <p>What&rsquo;s non-obvious about the fix is that the answer isn&rsquo;t &ldquo;cast something differently.&rdquo; The fix is about <strong>the shape of the data structure</strong>, not its contents. The tensors are the same before and after the PR; only their nesting depth in the state dict changes. That&rsquo;s the kind of fix that&rsquo;s easy to miss because you&rsquo;re looking for a type bug — you read <em>&ldquo;output tensor must have the same type as input tensor&rdquo;</em> and your brain fixates on dtype.</p>
+
+    <blockquote>This is not a bitsandbytes bug. It&rsquo;s not an FSDP bug either. The bug lives at the interface. This is most of what systems work is: reading two libraries neither of whose authors were imagining the other.</blockquote>
+
+    <figure class="breakout">
+      <img src="assets/blog-04-statedict.svg" alt="State dict before and after the bnb FSDP fix" />
+      <figcaption><span class="fignum">fig. 04</span><span>the bnb#1840 fix, visualized. same tensors, one extra level of nesting; a four-year-old issue closed by changing the shape of the data structure, not its contents.</span></figcaption>
+    </figure>
+
+    <p>Issue <code>#89</code> closed after four open years.</p>
+
+    <h2><span class="num">§ 04</span>Layer 3 — Axolotl as the integration point</h2>
+
+    <p>Axolotl is an open-source fine-tuning framework. Users write a YAML config; Axolotl configures the model, the dataset, the trainer, and runs. It&rsquo;s the user-facing layer — MXFP4 QAT support is what lets pytorch/ao&rsquo;s primitive and bitsandbytes&rsquo; fixed optimizer actually reach a practitioner.</p>
+
+    <h3>PR: <em>add: support mxfp4 axo</em> <span class="pr">axolotl#3375</span></h3>
+
+    <p>The change is small by line count and deliberately so. A new <code>mxfp4</code> member on <code>TorchAOQuantDType</code>. Validation in <code>validate_ao_dtype</code> accepting the string <code>"mxfp4"</code>. A guarded <code>from torchao.prototype.qat import MXFakeQuantizeConfig</code> (try/except so Axolotl still loads against older ao builds). A branch in <code>get_quantization_config</code> that instantiates the config with <code>float4_e2m1fn_x2</code> and enforces <code>block_size=32</code>. Plus an example at <code>examples/llama-3/3b-qat-mxfp4.yaml</code>, tuned to fit in 32 GB of VRAM.</p>
+
+    <p>The harder-than-expected part was ordering. The PR blocks on pytorch/ao#3644 — the config literally doesn&rsquo;t exist until that merges. The natural instinct was to vendor the config into Axolotl; I didn&rsquo;t, for the reasons below.</p>
+
+    <p>Two review comments changed the implementation. A review bot caught that I&rsquo;d written <code>"mxfp"</code> in the reverse map where I meant <code>"mxfp4"</code> — one character short. And an earlier version of the example YAML wasn&rsquo;t actually using QAT: it quantized, but not during training. The rewrite added the proper <code>qat:</code> block; a maintainer then did the final VRAM-tuning commit that made the example runnable on a single consumer GPU.</p>
+
+    <p>Once this lands, the full chain closes. The user writes three lines of YAML. Axolotl parses them into a pytorch/ao config. pytorch/ao wraps the model&rsquo;s Linear layers with MXFP4 fake-quant tensor subclasses. FSDP shards the model across GPUs, and bitsandbytes&rsquo; (now-fixed) 8-bit optimizer shards the optimizer state alongside it. Training runs. A QAT checkpoint drops out the other end, ready to be quantized and served through vLLM or SGLang.</p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2><span class="num">§ 05</span>What the seams taught me</h2>
+
+    <h3>1 — Upstream-first is slower, and always worth it.</h3>
+    <p>The fastest path was to vendor quantization logic directly into Axolotl. A day of work. Instead it took weeks because the primitive had to land in pytorch/ao first, get reviewed, get released, and only then get integrated downstream. But the same primitive now flows into every framework that adopts torchao. The version of me that wanted to ship fast was optimizing for the wrong time horizon.</p>
+
+    <h3>2 — The hardest bugs live at the interfaces.</h3>
+    <p>The bitsandbytes FSDP fix was not a bug inside bitsandbytes. It was a bug about bitsandbytes&rsquo; implicit contract with FSDP. This pattern repeats everywhere. Quantization × distributed training. Training × serving. Eager × compile. The interesting bugs are almost never inside one library; they&rsquo;re between two.</p>
+
+    <h3>3 — &ldquo;Fake&rdquo; quantization is why the stack can exist at all.</h3>
+    <p>If QAT required production 4-bit matmul kernels to work, we&rsquo;d not have a three-library stack. Each library would need to ship its own low-precision compute path. Instead, because fake quantization keeps values in BF16 and simulates the numerics, only pytorch/ao has to understand MXFP4. Everyone downstream can stay oblivious and still be correct. When you see a stack that cleanly layers across three libraries, look for the equivalent decision — there&rsquo;s usually one choice, made early, that bought everyone else the right to ignore each other.</p>
+
+    <div class="endnote">
+      <div>— ved · april 2026 · <a href="Portfolio.html">back to portfolio</a></div>
+      <div>find me at x/@ant_vedaya · github/ved1beta · ved@axolotl.ai</div>
+      <div style="margin-top: 14px; color: #444;">if you&rsquo;re working on any part of this stack, i&rsquo;d be glad to talk. the seams are where the hard problems are.</div>
+    </div>
+  </article>
+</div>
+
+</body>
+</html>

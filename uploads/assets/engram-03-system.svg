@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="480" fill="#0d0d0d"/>
+  <text x="40" y="50" font-family="JetBrains Mono, monospace" font-size="13" fill="#6a6a66" letter-spacing="1">SYSTEM · TRAINING vs INFERENCE</text>
+
+  <!-- divider down the middle -->
+  <line x1="600" y1="80" x2="600" y2="440" stroke="#1f1f1f" stroke-dasharray="3 4"/>
+
+  <!-- LEFT: TRAINING -->
+  <text x="40" y="100" font-family="Inter, sans-serif" font-size="18" fill="#e8e8e3">(a) training</text>
+  <text x="40" y="120" font-family="JetBrains Mono, monospace" font-size="11" fill="#a3e635">sharded tables · all-to-all</text>
+
+  <!-- 4 GPU shards across the top -->
+  <g font-family="JetBrains Mono, monospace" font-size="11" fill="#e8e8e3">
+    <rect x="40" y="160" width="120" height="50" fill="none" stroke="#1f1f1f"/>
+    <text x="100" y="182" text-anchor="middle">shard 0</text>
+    <text x="100" y="200" text-anchor="middle" fill="#6a6a66">rows 0..N/4</text>
+
+    <rect x="180" y="160" width="120" height="50" fill="none" stroke="#1f1f1f"/>
+    <text x="240" y="182" text-anchor="middle">shard 1</text>
+    <text x="240" y="200" text-anchor="middle" fill="#6a6a66">rows N/4..N/2</text>
+
+    <rect x="320" y="160" width="120" height="50" fill="none" stroke="#1f1f1f"/>
+    <text x="380" y="182" text-anchor="middle">shard 2</text>
+    <text x="380" y="200" text-anchor="middle" fill="#6a6a66">rows N/2..3N/4</text>
+
+    <rect x="460" y="160" width="120" height="50" fill="none" stroke="#1f1f1f"/>
+    <text x="520" y="182" text-anchor="middle">shard 3</text>
+    <text x="520" y="200" text-anchor="middle" fill="#6a6a66">rows 3N/4..N</text>
+  </g>
+
+  <!-- All-to-All: cross arrows -->
+  <g stroke="#a3e63555">
+    <line x1="100" y1="240" x2="240" y2="320"/>
+    <line x1="100" y1="240" x2="380" y2="320"/>
+    <line x1="100" y1="240" x2="520" y2="320"/>
+    <line x1="240" y1="240" x2="100" y2="320"/>
+    <line x1="240" y1="240" x2="380" y2="320"/>
+    <line x1="240" y1="240" x2="520" y2="320"/>
+    <line x1="380" y1="240" x2="100" y2="320"/>
+    <line x1="380" y1="240" x2="240" y2="320"/>
+    <line x1="380" y1="240" x2="520" y2="320"/>
+    <line x1="520" y1="240" x2="100" y2="320"/>
+    <line x1="520" y1="240" x2="240" y2="320"/>
+    <line x1="520" y1="240" x2="380" y2="320"/>
+  </g>
+  <text x="320" y="282" font-family="JetBrains Mono, monospace" font-size="11" fill="#a3e635" text-anchor="middle">all-to-all</text>
+
+  <!-- 4 GPU rank consumers at bottom -->
+  <g font-family="JetBrains Mono, monospace" font-size="11" fill="#e8e8e3">
+    <rect x="40" y="320" width="120" height="50" fill="none" stroke="#1f1f1f"/>
+    <text x="100" y="342" text-anchor="middle">rank 0</text>
+    <text x="100" y="360" text-anchor="middle" fill="#6a6a66">batch slice</text>
+
+    <rect x="180" y="320" width="120" height="50" fill="none" stroke="#1f1f1f"/>
+    <text x="240" y="342" text-anchor="middle">rank 1</text>
+    <text x="240" y="360" text-anchor="middle" fill="#6a6a66">batch slice</text>
+
+    <rect x="320" y="320" width="120" height="50" fill="none" stroke="#1f1f1f"/>
+    <text x="380" y="342" text-anchor="middle">rank 2</text>
+    <text x="380" y="360" text-anchor="middle" fill="#6a6a66">batch slice</text>
+
+    <rect x="460" y="320" width="120" height="50" fill="none" stroke="#1f1f1f"/>
+    <text x="520" y="342" text-anchor="middle">rank 3</text>
+    <text x="520" y="360" text-anchor="middle" fill="#6a6a66">batch slice</text>
+  </g>
+
+  <text x="40" y="412" font-family="JetBrains Mono, monospace" font-size="11" fill="#6a6a66">3 rounds: count → ID scatter → embedding return — fully differentiable</text>
+
+  <!-- RIGHT: INFERENCE -->
+  <text x="640" y="100" font-family="Inter, sans-serif" font-size="18" fill="#e8e8e3">(b) inference</text>
+  <text x="640" y="120" font-family="JetBrains Mono, monospace" font-size="11" fill="#a3e635">host memory · async prefetch</text>
+
+  <!-- HOST MEMORY (full table) -->
+  <rect x="640" y="160" width="500" height="80" fill="none" stroke="#1f1f1f"/>
+  <text x="890" y="190" font-family="Inter, sans-serif" font-size="14" fill="#e8e8e3" text-anchor="middle">host memory · full table</text>
+  <text x="890" y="212" font-family="JetBrains Mono, monospace" font-size="11" fill="#6a6a66" text-anchor="middle">100s of millions of rows</text>
+  <text x="890" y="228" font-family="JetBrains Mono, monospace" font-size="11" fill="#a3e635" text-anchor="middle">deterministic hash → known IDs in advance</text>
+
+  <!-- prefetch arrow -->
+  <line x1="780" y1="240" x2="780" y2="290" stroke="#a3e635"/>
+  <polygon points="776,290 784,290 780,300" fill="#a3e635"/>
+  <text x="800" y="270" font-family="JetBrains Mono, monospace" font-size="11" fill="#a3e635">prefetch t+1</text>
+
+  <line x1="1000" y1="240" x2="1000" y2="290" stroke="#1f1f1f"/>
+  <polygon points="996,290 1004,290 1000,300" fill="#a3e635"/>
+  <text x="1020" y="270" font-family="JetBrains Mono, monospace" font-size="11" fill="#6a6a66">compute t</text>
+
+  <!-- GPU box at bottom -->
+  <rect x="640" y="300" width="500" height="80" fill="none" stroke="#1f1f1f"/>
+  <text x="890" y="328" font-family="Inter, sans-serif" font-size="14" fill="#e8e8e3" text-anchor="middle">GPU forward pass</text>
+  <text x="890" y="350" font-family="JetBrains Mono, monospace" font-size="11" fill="#6a6a66" text-anchor="middle">batch t consumes prefetched rows</text>
+  <text x="890" y="366" font-family="JetBrains Mono, monospace" font-size="11" fill="#a3e635" text-anchor="middle">overlap hides transfer · &lt;3% overhead</text>
+
+  <text x="640" y="412" font-family="JetBrains Mono, monospace" font-size="11" fill="#6a6a66">no GPU table memory · scales beyond a single device</text>
+</svg>

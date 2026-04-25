@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540" preserveAspectRatio="xMidYMid slice">
+    <rect width="1200" height="540" fill="#0d0d0d"></rect>
+    <text x="40" y="50" font-family="JetBrains Mono, monospace" font-size="13" fill="#6a6a66" letter-spacing="1">STACK TRACE · YAML → GPU</text>
+
+    
+    <rect x="100" y="100" width="260" height="90" fill="none" stroke="#1f1f1f"></rect>
+    <text x="120" y="130" font-family="Inter, sans-serif" font-size="16" fill="#e8e8e3">axolotl config</text>
+    <text x="120" y="158" font-family="JetBrains Mono, monospace" font-size="12" fill="#6a6a66">qat.activation_dtype: mxfp4</text>
+    <text x="120" y="176" font-family="JetBrains Mono, monospace" font-size="12" fill="#a3e635">3 lines</text>
+
+    
+    <line x1="360" y1="145" x2="460" y2="145" stroke="#1f1f1f" stroke-width="1"></line>
+    <polygon points="460,140 470,145 460,150" fill="#a3e635"></polygon>
+
+    
+    <rect x="470" y="100" width="260" height="90" fill="none" stroke="#1f1f1f"></rect>
+    <text x="490" y="130" font-family="Inter, sans-serif" font-size="16" fill="#e8e8e3">pytorch/ao</text>
+    <text x="490" y="158" font-family="JetBrains Mono, monospace" font-size="12" fill="#6a6a66">MXFakeQuantizedLinear</text>
+    <text x="490" y="176" font-family="JetBrains Mono, monospace" font-size="12" fill="#a3e635">tensor subclass</text>
+
+    <line x1="730" y1="145" x2="830" y2="145" stroke="#1f1f1f" stroke-width="1"></line>
+    <polygon points="830,140 840,145 830,150" fill="#a3e635"></polygon>
+
+    
+    <rect x="840" y="100" width="260" height="90" fill="none" stroke="#1f1f1f"></rect>
+    <text x="860" y="130" font-family="Inter, sans-serif" font-size="16" fill="#e8e8e3">GPU kernel</text>
+    <text x="860" y="158" font-family="JetBrains Mono, monospace" font-size="12" fill="#6a6a66">fake_quant → matmul</text>
+    <text x="860" y="176" font-family="JetBrains Mono, monospace" font-size="12" fill="#a3e635">BF16 compute</text>
+
+    
+    <g transform="translate(100, 260)">
+      <text font-family="JetBrains Mono, monospace" font-size="11" fill="#6a6a66" letter-spacing="1">LIBRARIES AT THE SEAM</text>
+      <g transform="translate(0, 30)">
+        <circle cx="0" cy="40" r="6" fill="#a3e635"></circle><circle cx="180" cy="40" r="6" fill="#2a2a2a"></circle><circle cx="360" cy="40" r="6" fill="#a3e635"></circle><circle cx="540" cy="40" r="6" fill="#2a2a2a"></circle><circle cx="720" cy="40" r="6" fill="#a3e635"></circle><circle cx="900" cy="40" r="6" fill="#2a2a2a"></circle>
+        <line x1="6" y1="40" x2="174" y2="40" stroke="#1f1f1f" stroke-dasharray="2 3"></line><line x1="186" y1="40" x2="354" y2="40" stroke="#1f1f1f" stroke-dasharray="2 3"></line><line x1="366" y1="40" x2="534" y2="40" stroke="#1f1f1f" stroke-dasharray="2 3"></line><line x1="546" y1="40" x2="714" y2="40" stroke="#1f1f1f" stroke-dasharray="2 3"></line><line x1="726" y1="40" x2="894" y2="40" stroke="#1f1f1f" stroke-dasharray="2 3"></line>
+      </g>
+      <g transform="translate(0, 90)" font-family="JetBrains Mono, monospace" font-size="11" fill="#6a6a66">
+        <text x="0" y="0">ao</text>
+        <text x="180" y="0">fsdp</text>
+        <text x="360" y="0">bnb</text>
+        <text x="540" y="0">peft</text>
+        <text x="720" y="0">axolotl</text>
+        <text x="900" y="0">vllm</text>
+      </g>
+    </g>
+    <text x="40" y="520" font-family="JetBrains Mono, monospace" font-size="11" fill="#6a6a66">fig. 02 — the path from config to kernel; each arrow is a library boundary</text>
+  </svg>
