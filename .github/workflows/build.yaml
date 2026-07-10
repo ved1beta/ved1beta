@@ -17,6 +17,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Cold-cache LOC walk paginates every repo's full commit history; warm runs
+    # take seconds. Bound it so a pathological run can't idle for the 6h default.
+    timeout-minutes: 90
     concurrency:
       group: update-stats
       cancel-in-progress: false

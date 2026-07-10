@@ -190,13 +190,11 @@ def stars_counter(data):
     return sum(node['node']['stargazers']['totalCount'] for node in data)
 
 
-def recursive_loc(owner, repo_name, data, cache_comment,
-                  addition_total=0, deletion_total=0, my_commits=0, cursor=None):
-    query_count('recursive_loc')
-    # 100 commits/page makes GitHub 502 on repos with deep histories (asking for
-    # additions/deletions per commit is the expensive part). 50 costs more
-    # round-trips but each one returns.
-    query = '''
+# 100 commits/page makes GitHub 502 on deep histories -- asking for per-commit
+# additions/deletions is the expensive part. 50 costs more round-trips but each
+# one returns. Page count is why this iterates rather than recurses: one frame
+# per page overflowed the stack on repos with thousands of commits.
+HISTORY_QUERY = '''
     query ($repo_name: String!, $owner: String!, $cursor: String) {
         repository(name: $repo_name, owner: $owner) {
             defaultBranchRef { target { ... on Commit {
@@ -209,44 +207,47 @@ def recursive_loc(owner, repo_name, data, cache_comment,
             } } }
         }
     }'''
-    variables = {'repo_name': repo_name, 'owner': owner, 'cursor': cursor}
-    r = post_graphql(query, variables)
-    if r.status_code == 200:
+
+
+def recursive_loc(owner, repo_name, data, cache_comment):
+    """Total (additions, deletions, commits) authored by OWNER_ID in one repo."""
+    additions = deletions = my_commits = 0
+    cursor = None
+    while True:
+        query_count('recursive_loc')
+        r = post_graphql(HISTORY_QUERY,
+                         {'repo_name': repo_name, 'owner': owner, 'cursor': cursor})
+        if r.status_code != 200:
+            force_close_file(data, cache_comment)
+            if r.status_code == 403:
+                raise Exception('Too many requests in a short amount of time!\n'
+                                'You\'ve hit the non-documented anti-abuse limit!')
+            raise Exception('recursive_loc() has failed with a', r.status_code,
+                            r.text, QUERY_COUNT)
+
         payload = r.json()
         if payload.get('errors') or payload.get('data') is None:
             force_close_file(data, cache_comment)  # save progress before raising
             check_graphql('recursive_loc', payload)
-        if payload['data']['repository']['defaultBranchRef'] is not None:
-            return loc_counter_one_repo(
-                owner, repo_name, data, cache_comment,
-                payload['data']['repository']['defaultBranchRef']['target']['history'],
-                addition_total, deletion_total, my_commits)
-        return 0
-    force_close_file(data, cache_comment)
-    if r.status_code == 403:
-        raise Exception('Too many requests in a short amount of time!\n'
-                        'You\'ve hit the non-documented anti-abuse limit!')
-    raise Exception('recursive_loc() has failed with a', r.status_code, r.text, QUERY_COUNT)
+
+        branch = payload['data']['repository']['defaultBranchRef']
+        if branch is None:          # empty repo
+            return 0, 0, 0
+        history = branch['target']['history']
+
+        for node in history['edges']:
+            if node['node']['author']['user'] == OWNER_ID:
+                my_commits += 1
+                additions += node['node']['additions']
+                deletions += node['node']['deletions']
+
+        if not history['edges'] or not history['pageInfo']['hasNextPage']:
+            return additions, deletions, my_commits
+        cursor = history['pageInfo']['endCursor']
 
 
-def loc_counter_one_repo(owner, repo_name, data, cache_comment, history,
-                         addition_total, deletion_total, my_commits):
-    for node in history['edges']:
-        if node['node']['author']['user'] == OWNER_ID:
-            my_commits += 1
-            addition_total += node['node']['additions']
-            deletion_total += node['node']['deletions']
-    if history['edges'] == [] or not history['pageInfo']['hasNextPage']:
-        return addition_total, deletion_total, my_commits
-    return recursive_loc(owner, repo_name, data, cache_comment,
-                         addition_total, deletion_total, my_commits,
-                         history['pageInfo']['endCursor'])
-
-
-def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None, edges=None):
+def loc_query(owner_affiliation, comment_size=0, force_cache=False):
     """Walk every accessible repo (60 at a time -- larger pages 502)."""
-    query_count('loc_query')
-    edges = [] if edges is None else edges
     query = '''
     query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
         user(login: $login) {
@@ -257,13 +258,17 @@ def loc_query(owner_affiliation, comment_size=0, force_cache=False, cursor=None,
             }
         }
     }'''
-    variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
-    r = simple_request(loc_query.__name__, query, variables)
-    repos = r.json()['data']['user']['repositories']
-    if repos['pageInfo']['hasNextPage']:
-        return loc_query(owner_affiliation, comment_size, force_cache,
-                         repos['pageInfo']['endCursor'], edges + repos['edges'])
-    return cache_builder(edges + repos['edges'], comment_size, force_cache)
+    edges, cursor = [], None
+    while True:
+        query_count('loc_query')
+        variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME,
+                     'cursor': cursor}
+        r = simple_request(loc_query.__name__, query, variables)
+        repos = r.json()['data']['user']['repositories']
+        edges += repos['edges']
+        if not repos['pageInfo']['hasNextPage']:
+            return cache_builder(edges, comment_size, force_cache)
+        cursor = repos['pageInfo']['endCursor']
 
 
 def cache_filename():
