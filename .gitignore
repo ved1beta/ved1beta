@@ -1,0 +1,4 @@
+# Private source photos and credentials -- never commit these.
+veded.jpeg
+headshot.local.*
+token

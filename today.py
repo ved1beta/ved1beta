@@ -17,8 +17,19 @@ import requests
 from dateutil import relativedelta
 from lxml import etree
 
-HEADERS = {'authorization': 'token ' + os.environ['ACCESS_TOKEN']}
-USER_NAME = os.environ['USER_NAME']
+TOKEN = os.environ.get('ACCESS_TOKEN', '').strip()
+if not TOKEN:
+    raise SystemExit(
+        'ACCESS_TOKEN is unset or empty.\n'
+        'Add it under Settings > Secrets and variables > Actions > '
+        '"Repository secrets" -- a *secret*, not a variable, and not an '
+        'Environment secret unless the job declares that environment.')
+
+USER_NAME = os.environ.get('USER_NAME', '').strip()
+if not USER_NAME:
+    raise SystemExit('USER_NAME is unset or empty.')
+
+HEADERS = {'authorization': 'token ' + TOKEN}
 COMMENT_SIZE = 7
 QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0,
                'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
@@ -58,11 +69,45 @@ def query_count(funct_id):
     QUERY_COUNT[funct_id] += 1
 
 
+PERM_HINT = (
+    'The token authenticated but is not allowed to read this.\n'
+    'A fine-grained PAT needs: Repository access = All repositories; '
+    'Repository permissions = Contents:read, Metadata:read; '
+    'Account permissions = Followers:read, Starring:read.\n'
+    'Org-owned repos also require the org to approve the token.'
+)
+
+
+def check_graphql(func_name, payload):
+    """GraphQL reports permission failures as HTTP 200 with errors + data:null.
+
+    Without this the null `data` propagates and dies later as an opaque
+    "'NoneType' object is not subscriptable", which says nothing about why.
+    """
+    errors = payload.get('errors')
+    if errors:
+        kinds = {e.get('type') for e in errors}
+        msgs = '; '.join(e.get('message', '?') for e in errors)
+        hint = f'\n{PERM_HINT}' if kinds & {'FORBIDDEN', 'INSUFFICIENT_SCOPES'} else ''
+        raise Exception(f'{func_name}: GraphQL errors: {msgs}{hint}')
+    if payload.get('data') is None:
+        raise Exception(f'{func_name}: GraphQL returned no data.\n{PERM_HINT}')
+    return payload
+
+
 def simple_request(func_name, query, variables):
     r = requests.post('https://api.github.com/graphql',
                       json={'query': query, 'variables': variables}, headers=HEADERS)
     if r.status_code == 200:
+        check_graphql(func_name, r.json())
         return r
+    if r.status_code == 401:
+        raise Exception(f'{func_name}: 401 Unauthorized -- ACCESS_TOKEN is invalid, '
+                        f'revoked, or expired.')
+    if r.status_code == 403:
+        raise Exception(f'{func_name}: 403 Forbidden.\n{PERM_HINT}\n'
+                        f'(A 403 partway through a long run instead means the '
+                        f'undocumented anti-abuse rate limit tripped.)')
     raise Exception(func_name, 'has failed with a', r.status_code, r.text, QUERY_COUNT)
 
 
@@ -131,10 +176,14 @@ def recursive_loc(owner, repo_name, data, cache_comment,
     r = requests.post('https://api.github.com/graphql',
                       json={'query': query, 'variables': variables}, headers=HEADERS)
     if r.status_code == 200:
-        if r.json()['data']['repository']['defaultBranchRef'] is not None:
+        payload = r.json()
+        if payload.get('errors') or payload.get('data') is None:
+            force_close_file(data, cache_comment)  # save progress before raising
+            check_graphql('recursive_loc', payload)
+        if payload['data']['repository']['defaultBranchRef'] is not None:
             return loc_counter_one_repo(
                 owner, repo_name, data, cache_comment,
-                r.json()['data']['repository']['defaultBranchRef']['target']['history'],
+                payload['data']['repository']['defaultBranchRef']['target']['history'],
                 addition_total, deletion_total, my_commits)
         return 0
     force_close_file(data, cache_comment)

@@ -31,13 +31,39 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Regenerate SVGs
-        run: python today.py
+        id: gen
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python today.py 2>&1 | tee /tmp/today.log
         env:
           # Fine-grained PAT, all repositories:
           #   Account:    read:Followers, read:Starring
           #   Repository: read:Contents, read:Metadata
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           USER_NAME: ${{ github.repository_owner }}
+
+      # TEMPORARY: Action logs need auth to read, so publish the failure into the
+      # repo where it can be fetched anonymously. Delete once the token works.
+      - name: Publish failure log
+        if: steps.gen.outcome == 'failure'
+        run: |
+          mkdir -p .github/debug
+          # Secret masking covers logs, not files we commit -- redact anyway.
+          tail -40 /tmp/today.log \
+            | sed -E 's/(gh[pousr]_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+)/***REDACTED***/g' \
+            > .github/debug/last-error.log
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f .github/debug/last-error.log
+          git commit -m "debug: capture today.py failure"
+          git push
+
+      - name: Fail the job if generation failed
+        if: steps.gen.outcome == 'failure'
+        run: |
+          echo "today.py failed -- see .github/debug/last-error.log"
+          exit 1
 
       - name: Commit if changed
         run: |
