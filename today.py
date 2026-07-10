@@ -45,11 +45,12 @@ LEN_CONTRIB = 5       # space -- inside {braces}, dots would read as noise
 LEN_STAR = 13         # dots
 LEN_COMMIT = 23       # dots
 LEN_FOLLOWER = 10     # dots
-# The LOC line's three fields share a 23-char budget (37 chars are static text),
-# so it cannot hold three 9-char values; past ~1M lines it grows wider than 60.
-LEN_LOC = 8           # space
-LEN_LOC_ADD = 8       # space
-LEN_LOC_DEL = 7       # space
+# LOC line: 14 chars of punctuation + a 19-char key leaves 27 for the three
+# numbers, i.e. 9 each -- enough for "999,999,999". The key was 4 chars longer
+# and the real totals turned out to be 9 digits, which pushed the line to 64.
+LEN_LOC = 9           # space
+LEN_LOC_ADD = 9       # space
+LEN_LOC_DEL = 9       # space
 
 
 def format_plural(unit):

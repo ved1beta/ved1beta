@@ -21,7 +21,7 @@ RAMP = "@%#*+=-:. "
 # reserved value widths -- MUST match the `length` args in today.py:svg_overwrite
 # MUST mirror today.py. dots => (gap+2) wide; space => exactly `length` wide.
 LEN = dict(age=49, repo=6, star=13, commit=23, follower=10,      # dots
-           contrib=5, loc=8, loc_add=8, loc_del=7)               # space
+           contrib=5, loc=9, loc_add=9, loc_del=9)               # space
 
 
 # ---------------------------------------------------------------- ascii art
@@ -116,8 +116,9 @@ def commits_line():
 
 
 def loc_line():
-    # 37 static + loc + loc_add + loc_del = 60 (all space-padded)
-    return ('<tspan class="cc">. </tspan><tspan class="key">Lines of Code on GitHub</tspan>:'
+    # 14 static + 19-char key + loc + loc_add + loc_del(9 each) = 60, all
+    # space-padded. A longer key cannot hold 9-digit totals; ours are 9 digits.
+    return ('<tspan class="cc">. </tspan><tspan class="key">Total Lines of Code</tspan>:'
             f'<tspan id="loc_data_dots">{pad_fill(LEN["loc"], PH["loc"])}</tspan>'
             f'<tspan class="value" id="loc_data">{PH["loc"]}</tspan>'
             ' ( '
