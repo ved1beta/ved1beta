@@ -78,6 +78,41 @@ PERM_HINT = (
 )
 
 
+RETRY_STATUS = (502, 503, 504)
+RETRY_TRIES = 5
+
+
+def post_graphql(query, variables):
+    """POST a query, retrying transient 5xx with exponential backoff.
+
+    Walking a large repo's commit history for additions/deletions is heavy
+    enough that GitHub's backend intermittently 502s. These are transient, so
+    a bare failure throws away an entire run's work over one bad response.
+    """
+    delay = 2
+    for attempt in range(1, RETRY_TRIES + 1):
+        try:
+            r = requests.post('https://api.github.com/graphql',
+                              json={'query': query, 'variables': variables},
+                              headers=HEADERS, timeout=60)
+        except requests.exceptions.RequestException as exc:
+            if attempt == RETRY_TRIES:
+                raise
+            print(f'   network error ({exc.__class__.__name__}), '
+                  f'retry {attempt}/{RETRY_TRIES - 1} in {delay}s')
+            time.sleep(delay)
+            delay *= 2
+            continue
+        if r.status_code in RETRY_STATUS and attempt < RETRY_TRIES:
+            print(f'   HTTP {r.status_code}, retry {attempt}/{RETRY_TRIES - 1} '
+                  f'in {delay}s')
+            time.sleep(delay)
+            delay *= 2
+            continue
+        return r
+    return r
+
+
 def check_graphql(func_name, payload):
     """GraphQL reports permission failures as HTTP 200 with errors + data:null.
 
@@ -96,8 +131,7 @@ def check_graphql(func_name, payload):
 
 
 def simple_request(func_name, query, variables):
-    r = requests.post('https://api.github.com/graphql',
-                      json={'query': query, 'variables': variables}, headers=HEADERS)
+    r = post_graphql(query, variables)
     if r.status_code == 200:
         check_graphql(func_name, r.json())
         return r
@@ -159,11 +193,14 @@ def stars_counter(data):
 def recursive_loc(owner, repo_name, data, cache_comment,
                   addition_total=0, deletion_total=0, my_commits=0, cursor=None):
     query_count('recursive_loc')
+    # 100 commits/page makes GitHub 502 on repos with deep histories (asking for
+    # additions/deletions per commit is the expensive part). 50 costs more
+    # round-trips but each one returns.
     query = '''
     query ($repo_name: String!, $owner: String!, $cursor: String) {
         repository(name: $repo_name, owner: $owner) {
             defaultBranchRef { target { ... on Commit {
-                history(first: 100, after: $cursor) {
+                history(first: 50, after: $cursor) {
                     totalCount
                     edges { node { ... on Commit { committedDate }
                         author { user { id } } deletions additions } }
@@ -173,8 +210,7 @@ def recursive_loc(owner, repo_name, data, cache_comment,
         }
     }'''
     variables = {'repo_name': repo_name, 'owner': owner, 'cursor': cursor}
-    r = requests.post('https://api.github.com/graphql',
-                      json={'query': query, 'variables': variables}, headers=HEADERS)
+    r = post_graphql(query, variables)
     if r.status_code == 200:
         payload = r.json()
         if payload.get('errors') or payload.get('data') is None:

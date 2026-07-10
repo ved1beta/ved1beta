@@ -55,8 +55,10 @@ jobs:
             > .github/debug/last-error.log
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f .github/debug/last-error.log
-          git commit -m "debug: capture today.py failure"
+          # today.py saves partial LOC progress before raising; keep it so the
+          # next run resumes instead of re-walking every commit from scratch.
+          git add -f .github/debug/last-error.log cache
+          git commit -m "debug: capture today.py failure, keep partial cache"
           git push
 
       - name: Fail the job if generation failed
