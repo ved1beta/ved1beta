@@ -110,4 +110,4 @@ pytorch/ao — (prototype) add support for MXFP8 and MXFP4 QAT (#3644)
 bitsandbytes — bug: fix 8bitoptim support with fsdp (#1840)
 Axolotl — add: support mxfp4 axo (#3375)
 Axolotl issue #3333 (MXFP4 QAT feature request): github.com/axolotl-ai-cloud/axolotl/issues/3333
-bitsandbytes issue #89 (8-bit optimizers don't work with FSDP): github.com/bitsandbytes-foundation/bitsandbytes/issues/89
+bitsandbytes issue #89 (8-bit optimizers don't work with FSDP): github.com/bitsandbytes-foundation/bitsandbytes/issues/89 
