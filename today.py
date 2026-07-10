@@ -113,19 +113,34 @@ def post_graphql(query, variables):
     return r
 
 
-def check_graphql(func_name, payload):
-    """GraphQL reports permission failures as HTTP 200 with errors + data:null.
+FATAL_ERRORS = {'FORBIDDEN', 'INSUFFICIENT_SCOPES', 'UNAUTHORIZED', 'NOT_FOUND'}
+_WARNED = set()
 
-    Without this the null `data` propagates and dies later as an opaque
-    "'NoneType' object is not subscriptable", which says nothing about why.
+
+def check_graphql(func_name, payload):
+    """Raise on fatal GraphQL errors; tolerate per-field ones.
+
+    GraphQL answers HTTP 200 for everything. A permission failure comes back as
+    errors + data:null -- unhandled, that null propagates and dies later as an
+    opaque "'NoneType' object is not subscriptable".
+
+    But `errors` is also used for per-field problems that leave `data` perfectly
+    usable, e.g. "The deletions count for this commit is unavailable" on commits
+    too large for GitHub to diff. Those must not abort the run.
     """
     errors = payload.get('errors')
+    data = payload.get('data')
     if errors:
         kinds = {e.get('type') for e in errors}
         msgs = '; '.join(e.get('message', '?') for e in errors)
-        hint = f'\n{PERM_HINT}' if kinds & {'FORBIDDEN', 'INSUFFICIENT_SCOPES'} else ''
-        raise Exception(f'{func_name}: GraphQL errors: {msgs}{hint}')
-    if payload.get('data') is None:
+        if data is None or kinds & FATAL_ERRORS:
+            hint = f'\n{PERM_HINT}' if kinds & {'FORBIDDEN', 'INSUFFICIENT_SCOPES'} else ''
+            raise Exception(f'{func_name}: GraphQL errors: {msgs}{hint}')
+        if msgs not in _WARNED:      # partial data -- note it once, keep going
+            _WARNED.add(msgs)
+            print(f'   note: {func_name}: {msgs}')
+        return payload
+    if data is None:
         raise Exception(f'{func_name}: GraphQL returned no data.\n{PERM_HINT}')
     return payload
 
@@ -226,20 +241,27 @@ def recursive_loc(owner, repo_name, data, cache_comment):
                             r.text, QUERY_COUNT)
 
         payload = r.json()
-        if payload.get('errors') or payload.get('data') is None:
-            force_close_file(data, cache_comment)  # save progress before raising
+        try:
             check_graphql('recursive_loc', payload)
+        except Exception:
+            force_close_file(data, cache_comment)  # save progress before raising
+            raise
 
         branch = payload['data']['repository']['defaultBranchRef']
         if branch is None:          # empty repo
             return 0, 0, 0
         history = branch['target']['history']
 
-        for node in history['edges']:
-            if node['node']['author']['user'] == OWNER_ID:
+        for edge in history['edges']:
+            node = edge['node']
+            # `author` is null for commits with no Git identity; `additions` and
+            # `deletions` are null on commits GitHub declines to diff (the
+            # "count for this commit is unavailable" error above).
+            author = node.get('author') or {}
+            if author.get('user') == OWNER_ID:
                 my_commits += 1
-                additions += node['node']['additions']
-                deletions += node['node']['deletions']
+                additions += node['additions'] or 0
+                deletions += node['deletions'] or 0
 
         if not history['edges'] or not history['pageInfo']['hasNextPage']:
             return additions, deletions, my_commits
