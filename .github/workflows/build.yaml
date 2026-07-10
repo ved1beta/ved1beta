@@ -1,0 +1,52 @@
+name: Update profile stats
+
+on:
+  schedule:
+    - cron: "0 4 * * *"   # daily, 04:00 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "dark_mode.svg"
+      - "light_mode.svg"
+      - "cache/**"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: update-stats
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Regenerate SVGs
+        run: python today.py
+        env:
+          # Fine-grained PAT, all repositories:
+          #   Account:    read:Followers, read:Starring
+          #   Repository: read:Contents, read:Metadata
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          USER_NAME: ${{ github.repository_owner }}
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dark_mode.svg light_mode.svg cache
+          if git diff --staged --quiet; then
+            echo "No changes."
+          else
+            git commit -m "chore: update profile stats"
+            git push
+          fi
