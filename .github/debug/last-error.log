@@ -1,40 +1,23 @@
-               ^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/urllib3/connection.py", line 571, in getresponse
-    httplib_response = super().getresponse()
-                       ^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/http/client.py", line 1450, in getresponse
-    response.begin()
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/http/client.py", line 355, in begin
-    self.headers = self.msg = parse_headers(self.fp)
-                              ^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/http/client.py", line 254, in parse_headers
-    return _parse_header_lines(headers, _class)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/http/client.py", line 248, in _parse_header_lines
-    return email.parser.Parser(_class=_class).parsestr(hstring)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/email/parser.py", line 64, in parsestr
-    return self.parse(StringIO(text), headersonly=headersonly)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/email/parser.py", line 53, in parse
-    feedparser.feed(data)
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/email/feedparser.py", line 174, in feed
-    self._call_parse()
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/email/feedparser.py", line 178, in _call_parse
-    self._parse()
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/email/feedparser.py", line 254, in _parsegen
-    if self._cur.get_content_type() == 'message/delivery-status':
-       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/email/message.py", line 620, in get_content_type
-    value = self.get('content-type', missing)
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/email/message.py", line 513, in get
-    return self.policy.header_fetch_parse(k, v)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/email/_policybase.py", line 324, in header_fetch_parse
-    return self._sanitize_header(name, value)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/email/_policybase.py", line 295, in _sanitize_header
-    if _has_surrogates(value):
-       ^^^^^^^^^^^^^^^^^^^^^^
-RecursionError: maximum recursion depth exceeded
+Calculation times:
+   account data:        317.2092 ms
+   age calculation:       0.0699 ms
+   HTTP 502, retry 1/4 in 2s
+Partial data saved to cache/8023ccdb050c111b3bf75fa530791aa1c599ef7722c430dfaab0385fa3f17e73.txt
+Traceback (most recent call last):
+  File "/home/runner/work/ved1beta/ved1beta/today.py", line 426, in <module>
+    total_loc, loc_time = perf_counter(loc_query, ALL, COMMENT_SIZE)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/ved1beta/ved1beta/today.py", line 406, in perf_counter
+    return funct(*args), time.perf_counter() - start
+           ^^^^^^^^^^^^
+  File "/home/runner/work/ved1beta/ved1beta/today.py", line 270, in loc_query
+    return cache_builder(edges, comment_size, force_cache)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/ved1beta/ved1beta/today.py", line 307, in cache_builder
+    loc = recursive_loc(owner, repo_name, data, cache_comment)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/ved1beta/ved1beta/today.py", line 231, in recursive_loc
+    check_graphql('recursive_loc', payload)
+  File "/home/runner/work/ved1beta/ved1beta/today.py", line 127, in check_graphql
+    raise Exception(f'{func_name}: GraphQL errors: {msgs}{hint}')
+Exception: recursive_loc: GraphQL errors: The deletions count for this commit is unavailable.
