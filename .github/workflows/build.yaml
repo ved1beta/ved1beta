@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 90
     concurrency:
       group: update-stats
-      cancel-in-progress: false
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
 
@@ -45,6 +45,9 @@ jobs:
           #   Repository: read:Contents, read:Metadata
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           USER_NAME: ${{ github.repository_owner }}
+          # Python block-buffers stdout through a pipe, so progress never
+          # reaches the log until the process ends.
+          PYTHONUNBUFFERED: "1"
 
       # TEMPORARY: Action logs need auth to read, so publish the failure into the
       # repo where it can be fetched anonymously. Delete once the token works.

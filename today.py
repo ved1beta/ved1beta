@@ -205,15 +205,19 @@ def stars_counter(data):
     return sum(node['node']['stargazers']['totalCount'] for node in data)
 
 
-# 100 commits/page makes GitHub 502 on deep histories -- asking for per-commit
-# additions/deletions is the expensive part. 50 costs more round-trips but each
+# `author:` filters server-side, so a repo costs pages proportional to *our*
+# commits rather than its entire history -- the difference between a few
+# requests and thousands on a big org repo.
+#
+# 100 commits/page makes GitHub 502 on deep histories, since per-commit
+# additions/deletions is the expensive part; 50 costs more round-trips but each
 # one returns. Page count is why this iterates rather than recurses: one frame
 # per page overflowed the stack on repos with thousands of commits.
 HISTORY_QUERY = '''
-    query ($repo_name: String!, $owner: String!, $cursor: String) {
+    query ($repo_name: String!, $owner: String!, $cursor: String, $author_id: ID!) {
         repository(name: $repo_name, owner: $owner) {
             defaultBranchRef { target { ... on Commit {
-                history(first: 50, after: $cursor) {
+                history(first: 50, after: $cursor, author: {id: $author_id}) {
                     totalCount
                     edges { node { ... on Commit { committedDate }
                         author { user { id } } deletions additions } }
@@ -231,7 +235,8 @@ def recursive_loc(owner, repo_name, data, cache_comment):
     while True:
         query_count('recursive_loc')
         r = post_graphql(HISTORY_QUERY,
-                         {'repo_name': repo_name, 'owner': owner, 'cursor': cursor})
+                         {'repo_name': repo_name, 'owner': owner, 'cursor': cursor,
+                          'author_id': OWNER_ID['id']})
         if r.status_code != 200:
             force_close_file(data, cache_comment)
             if r.status_code == 403:
