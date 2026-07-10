@@ -1,2 +1,0 @@
-ACCESS_TOKEN is unset or empty.
-Add it under Settings > Secrets and variables > Actions > "Repository secrets" -- a *secret*, not a variable, and not an Environment secret unless the job declares that environment.
