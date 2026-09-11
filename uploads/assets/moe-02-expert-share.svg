@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 416" width="900" height="416"><rect width="900" height="416" fill="#0a0a0a"/>
+<text x="40" y="34" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="13" fill="#e8e8e3" text-anchor="start" font-weight="normal" >expert parameters as a share of total · every MoE architecture Axolotl supports</text>
+<text x="288" y="79" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#b8b8b3" text-anchor="end" font-weight="normal" >Gemma-4-26B-A4B</text>
+<rect x="300" y="64" width="460" height="20" fill="#121212" stroke="#1f1f1f"/>
+<rect x="300" y="64" width="407.1" height="20" fill="#a3e635" opacity="0.85"/>
+<text x="699.1" y="78" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#0a0a0a" text-anchor="end" font-weight="bold" >88.5%</text>
+<text x="772" y="78" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10.5" fill="#6a6a66" text-anchor="start" font-weight="normal" >25.8B · 60 tensors</text>
+<text x="288" y="113" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#b8b8b3" text-anchor="end" font-weight="normal" >GLM-4.7-Flash</text>
+<rect x="300" y="98" width="460" height="20" fill="#121212" stroke="#1f1f1f"/>
+<rect x="300" y="98" width="426.9" height="20" fill="#a3e635" opacity="0.85"/>
+<text x="718.88" y="112" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#0a0a0a" text-anchor="end" font-weight="bold" >92.8%</text>
+<text x="772" y="112" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10.5" fill="#6a6a66" text-anchor="start" font-weight="normal" >29.9B · 92 tensors</text>
+<text x="288" y="147" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#b8b8b3" text-anchor="end" font-weight="normal" >Nemotron-3-Nano-30B-A3B</text>
+<rect x="300" y="132" width="460" height="20" fill="#121212" stroke="#1f1f1f"/>
+<rect x="300" y="132" width="427.8" height="20" fill="#a3e635" opacity="0.85"/>
+<text x="719.8" y="146" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#0a0a0a" text-anchor="end" font-weight="bold" >93.0%</text>
+<text x="772" y="146" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10.5" fill="#6a6a66" text-anchor="start" font-weight="normal" >31.6B · 46 tensors</text>
+<text x="288" y="181" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#b8b8b3" text-anchor="end" font-weight="normal" >Qwen3.5-35B-A3B</text>
+<rect x="300" y="166" width="460" height="20" fill="#121212" stroke="#1f1f1f"/>
+<rect x="300" y="166" width="427.3" height="20" fill="#a3e635" opacity="0.85"/>
+<text x="719.3399999999999" y="180" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#0a0a0a" text-anchor="end" font-weight="bold" >92.9%</text>
+<text x="772" y="180" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10.5" fill="#6a6a66" text-anchor="start" font-weight="normal" >34.7B · 80 tensors</text>
+<text x="288" y="215" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#b8b8b3" text-anchor="end" font-weight="normal" >Qwen3-Next-80B-A3B</text>
+<rect x="300" y="200" width="460" height="20" fill="#121212" stroke="#1f1f1f"/>
+<rect x="300" y="200" width="446.2" height="20" fill="#a3e635" opacity="0.85"/>
+<text x="738.2" y="214" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#0a0a0a" text-anchor="end" font-weight="bold" >97.0%</text>
+<text x="772" y="214" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10.5" fill="#6a6a66" text-anchor="start" font-weight="normal" >79.7B · 96 tensors</text>
+<text x="288" y="249" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#b8b8b3" text-anchor="end" font-weight="normal" >GLM-4.5-Air</text>
+<rect x="300" y="234" width="460" height="20" fill="#121212" stroke="#1f1f1f"/>
+<rect x="300" y="234" width="429.2" height="20" fill="#a3e635" opacity="0.85"/>
+<text x="721.1800000000001" y="248" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#0a0a0a" text-anchor="end" font-weight="bold" >93.3%</text>
+<text x="772" y="248" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10.5" fill="#6a6a66" text-anchor="start" font-weight="normal" >106.9B · 90 tensors</text>
+<text x="288" y="283" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#b8b8b3" text-anchor="end" font-weight="normal" >Mistral-Small-4-119B</text>
+<rect x="300" y="268" width="460" height="20" fill="#121212" stroke="#1f1f1f"/>
+<rect x="300" y="268" width="449.0" height="20" fill="#a3e635" opacity="0.85"/>
+<text x="740.96" y="282" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#0a0a0a" text-anchor="end" font-weight="bold" >97.6%</text>
+<text x="772" y="282" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10.5" fill="#6a6a66" text-anchor="start" font-weight="normal" >118.9B · 72 tensors</text>
+<text x="288" y="317" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#b8b8b3" text-anchor="end" font-weight="normal" >Nemotron-3-Super-120B-A12B</text>
+<rect x="300" y="302" width="460" height="20" fill="#121212" stroke="#1f1f1f"/>
+<rect x="300" y="302" width="429.6" height="20" fill="#a3e635" opacity="0.85"/>
+<text x="721.64" y="316" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#0a0a0a" text-anchor="end" font-weight="bold" >93.4%</text>
+<text x="772" y="316" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10.5" fill="#6a6a66" text-anchor="start" font-weight="normal" >120.7B · 80 tensors</text>
+<text x="288" y="351" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#b8b8b3" text-anchor="end" font-weight="normal" >Qwen3.5-122B-A10B</text>
+<rect x="300" y="336" width="460" height="20" fill="#121212" stroke="#1f1f1f"/>
+<rect x="300" y="336" width="437.0" height="20" fill="#a3e635" opacity="0.85"/>
+<text x="729.0" y="350" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#0a0a0a" text-anchor="end" font-weight="bold" >95.0%</text>
+<text x="772" y="350" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10.5" fill="#6a6a66" text-anchor="start" font-weight="normal" >122.1B · 96 tensors</text>
+<line x1="300.0" y1="58" x2="300.0" y2="376" stroke="#1f1f1f" stroke-dasharray="2 4"/>
+<text x="300.0" y="392" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10" fill="#6a6a66" text-anchor="middle" font-weight="normal" >0%</text>
+<line x1="530.0" y1="58" x2="530.0" y2="376" stroke="#1f1f1f" stroke-dasharray="2 4"/>
+<text x="530.0" y="392" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10" fill="#6a6a66" text-anchor="middle" font-weight="normal" >50%</text>
+<line x1="760.0" y1="58" x2="760.0" y2="376" stroke="#1f1f1f" stroke-dasharray="2 4"/>
+<text x="760.0" y="392" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10" fill="#6a6a66" text-anchor="middle" font-weight="normal" >100%</text>
+<line x1="731.02" y1="58" x2="731.02" y2="356" stroke="#a3e635" stroke-dasharray="2 4" opacity="0.7"/><text x="731.02" y="52" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#a3e635" text-anchor="middle">avg 93.7%</text>
+</svg>

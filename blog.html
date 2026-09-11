@@ -104,7 +104,7 @@
     <h1 class="title">MXFP4, End-to-End: How a 4-bit Recipe Travels from pytorch/ao to Axolotl</h1>
     <div class="dek">Three lines of YAML. A year of plumbing. The trace between them.</div>
     <div class="author-card">
-      <img src="assets/headshot.jpeg" alt="Ved" />
+      <img src="uploads/assets/headshot.jpeg" alt="Ved" />
       <div class="info">
         <div>by <a href="Portfolio.html">Ved</a> · systems engineer at Axolotl AI</div>
         <div>github / <a href="https://github.com/ved1beta">ved1beta</a> · x / @ant_vedaya</div>
@@ -125,7 +125,7 @@
     <p>I&rsquo;m a systems engineer at Axolotl. Over the past year I&rsquo;ve contributed to <strong>pytorch/ao</strong> (the PyTorch-native quantization library), <strong>bitsandbytes</strong> (the 8-bit optimizer and 4-bit quantization library that almost every QLoRA workflow depends on), and <strong>Axolotl</strong> itself. MXFP4 QAT is one of the threads that passes through all three. This is the plumbing post I wish had existed when I started.</p>
 
     <figure class="breakout">
-      <img src="assets/blog-01-mxfp4-blocks.svg" alt="MXFP4 block structure" />
+      <img src="uploads/assets/blog-01-mxfp4-blocks.svg" alt="MXFP4 block structure" />
       <figcaption><span class="fignum">fig. 01</span><span>microscaling block layout — every 32 consecutive values share one UE8M0 scale. 7 positive E2M1 values plus negatives and zero.</span></figcaption>
     </figure>
 
@@ -148,7 +148,7 @@
     <blockquote>This fake-quantization trick is the single design decision that makes the entire training-to-serving pipeline possible across three libraries. Hold onto it — it comes back at the end.</blockquote>
 
     <figure class="breakout">
-      <img src="assets/blog-02-stack.svg" alt="Stack trace from YAML to GPU" />
+      <img src="uploads/assets/blog-02-stack.svg" alt="Stack trace from YAML to GPU" />
       <figcaption><span class="fignum">fig. 02</span><span>the path from three YAML lines to a GPU kernel; each arrow is a library boundary with its own contract.</span></figcaption>
     </figure>
 
@@ -179,7 +179,7 @@ quantize_(model, QATConfig(mx_config, step=<span class="k">"convert"</span>))</c
     <p>The other foundational catch was a missing equivalence test between QAT prepare and PTQ forward. The resulting <code>test_quantize_api_mx</code> asserts <code>target_prepare_sqnr=float("inf")</code> — QAT and PTQ forward must match exactly, because they share kernels. That test is what lets Axolotl downstream trust that <code>step="prepare"</code> and <code>step="convert"</code> produce numerically compatible outputs.</p>
 
     <figure class="breakout">
-      <img src="assets/blog-03-loss.svg" alt="Training loss curve — BF16 vs MXFP4 QAT" />
+      <img src="uploads/assets/blog-03-loss.svg" alt="Training loss curve — BF16 vs MXFP4 QAT" />
       <figcaption><span class="fignum">fig. 03</span><span>QAT loss curve tracks BF16 baseline within ~2% at convergence. The 4-bit noise becomes part of what the model learns to be robust to.</span></figcaption>
     </figure>
 
@@ -206,7 +206,7 @@ quantize_(model, QATConfig(mx_config, step=<span class="k">"convert"</span>))</c
     <blockquote>This is not a bitsandbytes bug. It&rsquo;s not an FSDP bug either. The bug lives at the interface. This is most of what systems work is: reading two libraries neither of whose authors were imagining the other.</blockquote>
 
     <figure class="breakout">
-      <img src="assets/blog-04-statedict.svg" alt="State dict before and after the bnb FSDP fix" />
+      <img src="uploads/assets/blog-04-statedict.svg" alt="State dict before and after the bnb FSDP fix" />
       <figcaption><span class="fignum">fig. 04</span><span>the bnb#1840 fix, visualized. same tensors, one extra level of nesting; a four-year-old issue closed by changing the shape of the data structure, not its contents.</span></figcaption>
     </figure>
 

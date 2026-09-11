@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>127 GiB → 18 GiB — ved1beta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0a0a; --surface: #121212; --border: #1f1f1f;
+    --fg: #e8e8e3; --fg-dim: #b8b8b3; --muted: #6a6a66;
+    --accent: #a3e635;
+    --sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --serif: "Instrument Serif", Georgia, serif;
+  }
+  html, body { margin:0; padding:0; background:var(--bg); color:var(--fg); font-family:var(--sans); }
+  * { box-sizing: border-box; }
+  ::selection { background: color-mix(in oklab, var(--accent) 35%, transparent); color: var(--fg); }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in oklab, var(--accent) 40%, transparent); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 56px 32px 140px; }
+  .topbar { display:flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .6px; text-transform: uppercase; max-width: 1200px; margin: 0 auto; padding: 20px 32px; border-bottom: 1px solid var(--border); }
+  .topbar a { color: var(--fg-dim); border: none; }
+  .topbar a:hover { color: var(--accent); }
+
+  .meta { font-family: var(--mono); font-size: 11.5px; color: var(--muted); letter-spacing: .4px; display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+  .meta .dot { color: #333; }
+
+  h1.title { font-size: 56px; font-weight: 400; letter-spacing: -1.2px; line-height: 1.05; margin: 0; text-wrap: balance; }
+  .dek { font-family: var(--serif); font-style: italic; font-size: 26px; color: var(--fg-dim); line-height: 1.35; margin-top: 18px; text-wrap: pretty; }
+  .byline { margin-top: 36px; font-family: var(--mono); font-size: 12px; color: var(--muted); padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+
+  article p { font-size: 17.5px; line-height: 1.75; color: #d8d8d3; margin: 22px 0; text-wrap: pretty; }
+  article h2 { font-size: 28px; font-weight: 400; letter-spacing: -.4px; margin: 72px 0 4px; line-height: 1.2; }
+  article h2 .num { font-family: var(--mono); font-size: 12px; color: var(--accent); display: block; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+  article h3 { font-size: 20px; font-weight: 500; margin: 44px 0 -6px; color: var(--fg); }
+  article h3 .pr { font-family: var(--mono); font-size: 11.5px; color: var(--accent); letter-spacing: .5px; margin-left: 4px; }
+
+  article ul { padding-left: 22px; }
+  article li { font-size: 17px; line-height: 1.7; color: #d8d8d3; margin: 10px 0; }
+  article li strong { color: var(--fg); font-weight: 500; }
+
+  article code { font-family: var(--mono); font-size: 14.5px; color: var(--accent); background: color-mix(in oklab, var(--accent) 6%, transparent); padding: 1px 6px; border-radius: 3px; }
+  pre { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px 22px; overflow: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.7; color: #d0d0cb; }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+  pre .k { color: var(--accent); }
+  pre .c { color: var(--muted); font-style: italic; }
+
+  blockquote { border-left: 2px solid var(--accent); margin: 28px 0; padding: 4px 0 4px 20px; color: var(--fg-dim); font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.55; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 72px 0; }
+
+  .footnote { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 10px; line-height: 1.65; }
+
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .8px; color: var(--accent); text-transform: uppercase; margin-top: 48px; }
+
+  .lede { font-size: 20px; color: var(--fg); line-height: 1.6; margin-top: 30px; }
+  .lede::first-line { letter-spacing: .2px; }
+
+  .endnote { margin-top: 120px; padding-top: 36px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+
+  .tag-row { display:flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-family: var(--mono); font-size: 10.5px; color: var(--muted); border: 1px solid var(--border); padding: 3px 8px; border-radius: 3px; letter-spacing: .5px; text-transform: uppercase; }
+
+  .ornament { display:flex; justify-content: center; margin: 48px 0; color: var(--muted); letter-spacing: 8px; font-family: var(--mono); font-size: 12px; }
+
+  /* figures */
+  figure { margin: 56px 0; }
+  figure.breakout { width: calc(100% + 160px); margin-left: -80px; margin-right: -80px; }
+  figure.fullbleed { width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); }
+  figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 2px; }
+  figure.fullbleed img { border-left: none; border-right: none; border-radius: 0; }
+  figcaption { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 14px; letter-spacing: .3px; line-height: 1.6; display: flex; gap: 14px; }
+  figcaption .fignum { color: var(--accent); white-space: nowrap; }
+  @media (max-width: 900px) { figure.breakout, figure.fullbleed { width: 100%; margin-left: 0; margin-right: 0; } }
+
+  .author-card { display: flex; align-items: center; gap: 14px; margin-top: 32px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+  .author-card img { width: 44px; height: 44px; border-radius: 999px; object-fit: cover; border: 1px solid var(--border); filter: grayscale(0.15) contrast(1.02); }
+  .author-card .info { font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .author-card .info a { color: var(--fg-dim); border: none; }
+  .author-card .info a:hover { color: var(--accent); }
+
+  /* tables */
+  .tbl { width: 100%; border-collapse: collapse; margin: 32px 0; font-size: 14.5px; }
+  .tbl th, .tbl td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .tbl th { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .6px; text-transform: uppercase; font-weight: 500; }
+  .tbl td { color: #d8d8d3; }
+  .tbl td.num { font-family: var(--mono); font-size: 13.5px; }
+  .tbl td.hi { color: var(--accent); }
+  .tbl-note { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: -20px; }
+  .callout { border: 1px solid var(--border); background: var(--surface); border-radius: 4px; padding: 18px 22px; margin: 32px 0; font-size: 15px; line-height: 1.7; color: var(--fg-dim); }
+  .callout strong { color: var(--fg); font-weight: 500; }
+  .callout code { font-size: 13px; }
+  .tbl-wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="Portfolio.html">← ved1beta</a>
+  <div>essay · 2026</div>
+</div>
+
+<div class="wrap">
+  <article>
+    <div class="meta">
+      <span>2026-09-11</span><span class="dot">·</span>
+      <span>9 min read</span><span class="dot">·</span>
+      <span class="tag-row"><span class="tag">moe</span><span class="tag">qlora</span><span class="tag">transformers v5</span></span>
+    </div>
+
+    <h1 class="title">127 GiB → 18 GiB: Fine-Tuning a Frontier MoE on a Single GPU</h1>
+    <div class="dek">Modern MoE checkpoints quietly load their experts in fp32. How I found out, and the one config line I added to fix it.</div>
+    <div class="author-card">
+      <img src="uploads/assets/headshot.jpeg" alt="Ved" />
+      <div class="info">
+        <div>by <a href="Portfolio.html">Ved</a> · systems engineer at Axolotl AI · originally on the Axolotl engineering blog</div>
+        <div>github / <a href="https://github.com/ved1beta">ved1beta</a> · x / @ant_vedaya</div>
+      </div>
+    </div>
+
+    <p class="lede">This is a post about a memory problem I spent longer on than I&rsquo;d like to admit: how a QLoRA fine-tune of a 30B MoE came to reserve 126.67 GiB of VRAM on my A100s, and how the one config line I ended up adding to Axolotl brings the same run down to 18.23 GiB on a single card.</p>
+
+    <h3>Why should you care?</h3>
+
+    <p>GLM-4.7-Flash is a 29.9B-parameter MoE, so roughly 56 GiB of bf16 weights. When I first pointed a QLoRA config at it I expected it to sit comfortably on a single 80 GiB card. That is the whole promise of QLoRA.</p>
+
+    <p>It didn&rsquo;t. On two A100-80GBs it never finished loading at all — it OOMed inside PEFT&rsquo;s <code>prepare_model_for_kbit_training</code>, upcasting the expert weights to fp32. When I spread it across both cards with <code>device_map: auto</code> so it would at least load, it reserved 126.67 GiB.</p>
+
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th></th><th>Stock</th><th><code>quantize_moe_experts</code></th><th>Reduction</th></tr></thead>
+      <tbody>
+        <tr><td>Reserved VRAM</td><td class="num">126.67 GiB</td><td class="num hi">18.23 GiB</td><td class="num">6.9×</td></tr>
+        <tr><td>GPUs</td><td>2× A100, and it still OOMs while loading</td><td class="hi">1, with 61 GiB left over</td><td class="num">7.1× like-for-like at load</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>My first instinct was that I had misconfigured something. I hadn&rsquo;t. It isn&rsquo;t a bug in Axolotl or bitsandbytes either. Both were relying on an assumption about what a linear layer looks like, and Transformers v5 changed it underneath them. This post is how I found that out, and what I did about it.</p>
+
+    <ul>
+      <li><strong>Where the memory actually goes:</strong> a dtype census</li>
+      <li><strong>Who moved my <code>nn.Linear</code>:</strong> what Transformers v5 changed</li>
+      <li><strong>The fix:</strong> quantize the tensor as it lands</li>
+      <li><strong>It isn&rsquo;t just GLM:</strong> every supported MoE is exposed</li>
+      <li><strong>What it costs:</strong> memory, throughput, and the sharp edges</li>
+      <li><strong>Reproduce it:</strong> one script, two flags</li>
+    </ul>
+
+    <div class="ornament">· · ·</div>
+
+    <h2><span class="num">§ 01</span>Where the memory actually goes</h2>
+
+    <p>When 126 GiB shows up unexplained, the first question I&rsquo;ve learned to ask isn&rsquo;t &ldquo;which layer&rdquo; but &ldquo;what dtype is everything in&rdquo;. So before touching any config, I dumped a census: every parameter in the loaded model, bucketed by dtype, summed in GiB.</p>
+
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>dtype</th><th>Feature off (GiB)</th><th>Feature on (GiB)</th></tr></thead>
+      <tbody>
+        <tr><td>fp32</td><td class="num">103.56</td><td class="num hi">0.06</td></tr>
+        <tr><td>bf16</td><td class="num">1.89</td><td class="num">1.89</td></tr>
+        <tr><td>uint8 (nf4-packed)</td><td class="num">—</td><td class="num">12.94</td></tr>
+        <tr><td><strong>Total weights</strong></td><td class="num"><strong>105.45</strong></td><td class="num hi"><strong>14.89</strong></td></tr>
+      </tbody>
+    </table></div>
+
+    <figure class="breakout">
+      <img src="uploads/assets/moe-01-census.svg" alt="Weight memory by dtype, feature off vs on" />
+      <figcaption><span class="fignum">fig. 01</span><span>the dtype census. with the feature off, 103.56 of 105.45 GiB is fp32; with it on, the experts pack into 12.94 GiB of nf4.</span></figcaption>
+    </figure>
+
+    <p><strong>103.56 GiB of fp32. In a QLoRA run. On a checkpoint that ships in bf16.</strong> I stared at that line for a while.</p>
+
+    <p>Once you see it, the number is easy to account for: GLM-4.7-Flash has 27.78B expert parameters, and at 4 bytes each that comes to 103.5 GiB. Every expert weight in the model was sitting in single precision.</p>
+
+    <p>So the experts hadn&rsquo;t simply been missed by the quantizer. They had been <em>promoted</em> from 16-bit to 32-bit — twice what they would have cost if I had configured no quantization at all. My &ldquo;memory-saving&rdquo; run was the most expensive way to load this model.</p>
+
+    <p>The function responsible is <code>prepare_model_for_kbit_training</code>, which casts any parameter it doesn&rsquo;t recognise as quantized up to fp32. I understand why it does that: it&rsquo;s a reasonable default when the leftovers are norms and biases. It stops being reasonable when they are 93% of the model.</p>
+
+    <h2><span class="num">§ 02</span>Who moved my <code>nn.Linear</code></h2>
+
+    <p>That answered <em>where</em>. The next question was why bitsandbytes hadn&rsquo;t quantized the experts in the first place.</p>
+
+    <p>Because, as of Transformers v5, they aren&rsquo;t <code>nn.Linear</code> layers any more.</p>
+
+    <p>I&rsquo;d been reading MoE code for long enough that I still had the old shape in my head: a MoE block holds an <code>nn.ModuleList</code> of <code>nn.Linear</code>, one module per expert. That is exactly the surface bnb knows how to work with — walk the module tree, find the Linear layers, swap in <code>Linear4bit</code>.</p>
+
+<pre><code><span class="c"># before: N separate modules, each one a quantization target</span>
+self.experts = nn.ModuleList([
+    nn.Linear(hidden, ffn, bias=False) <span class="k">for</span> _ <span class="k">in</span> range(num_experts)
+])</code></pre>
+
+    <p>Transformers v5 fused those stacks into single 3-D <code>nn.Parameter</code> tensors:</p>
+
+<pre><code><span class="c"># after: one 3-D tensor. No nn.Linear anywhere for bnb to find.</span>
+self.gate_up_proj = nn.Parameter(torch.empty(num_experts, 2 * ffn, hidden))
+self.down_proj    = nn.Parameter(torch.empty(num_experts, hidden, ffn))</code></pre>
+
+    <p>On its own terms I think that&rsquo;s a good change. A grouped GEMM over one contiguous tensor beats looping over a ModuleList, and the fused MoE kernels depend on it. I would have made the same call.</p>
+
+    <p>But it also removed the only handle bnb had. There is no module left to replace, so <code>Linear4bit</code> never gets created, and <code>prepare_model_for_kbit_training</code> later finds a large float tensor and does what it always does with one.</p>
+
+    <blockquote>Nothing raises and nothing warns. The run just needs seven times the memory.</blockquote>
+
+    <p>This is the kind of bug I&rsquo;ve come to expect at the seams between libraries. Transformers is right about its own layout. bitsandbytes is right about what it knows how to quantize. PEFT is right about what to do with an unquantized float tensor. Each of them is correct about itself and wrong about the others, and nobody owns the gap.</p>
+
+    <h2><span class="num">§ 03</span>The fix</h2>
+
+    <p>If there is no module to swap, quantize the tensor as it lands.</p>
+
+    <p>That is the whole idea behind <code>quantize_moe_experts</code>. I hook <code>set_param_for_module</code> — the function Transformers uses to place each weight on the device during loading — and quantize any 3-D expert tensor the moment it arrives:</p>
+
+<pre><code>original_set_param = transformers.core_model_loading.set_param_for_module
+
+
+<span class="k">def</span> _patched_set_param_for_module(model, target_name, param_value, *args, **kwargs):
+    original_set_param(model, target_name, param_value, *args, **kwargs)
+
+    <span class="k">if</span> param_value.ndim &gt;= 3 <span class="k">and</span> param_value.is_cuda:
+        mod_path, _, pname = target_name.rpartition(<span class="k">"."</span>)
+        mod = model.get_submodule(mod_path) <span class="k">if</span> mod_path <span class="k">else</span> model
+
+        <span class="k">if not</span> isinstance(mod, (bnb.nn.Linear4bit, bnb.nn.Linear8bitLt)):
+            <span class="k">if</span> <span class="k">"expert"</span> <span class="k">not in</span> target_name.lower():
+                <span class="k">return</span>  <span class="c"># 3-D, but not an expert</span>
+
+            replace_parameter_4bit(mod, pname, quant_type=<span class="k">"nf4"</span>)
+
+            <span class="c"># Release the bf16 tensor so CUDA memory is freed immediately.</span>
+            param_value.data = torch.empty(0, device=<span class="k">"cpu"</span>)
+            torch.cuda.empty_cache()
+
+
+transformers.core_model_loading.set_param_for_module = _patched_set_param_for_module</code></pre>
+
+    <div class="callout"><strong>What the abridged version leaves out:</strong> the real implementation also records parameter definition order so saved adapters stay compatible with stock PEFT, and it has an 8-bit branch that registers a <code>torch.nn.utils.parametrize</code> parametrization holding int8 data plus row statistics, dequantizing on access with caching around the forward.</div>
+
+    <p>Two details cost me more time than the hook itself.</p>
+
+    <p>The first is dropping the bf16 tensor immediately after quantizing. My first version didn&rsquo;t, and peak memory barely moved — I was holding both copies for the whole load and only freeing at the end. Final memory looked great; the OOM was still there. That line is what keeps <em>peak</em> memory low rather than just final memory.</p>
+
+    <p>The second I only found by watching <code>nvidia-smi</code> during load and seeing the reservation jump before a single expert had been touched. Transformers calls <code>caching_allocator_warmup</code> before loading to pre-reserve an allocation sized for the full bf16 footprint of every parameter. That alone gives back all the savings — the allocator has already booked 100+ GiB — so the patch no-ops it:</p>
+
+<pre><code><span class="k">def</span> _noop_warmup(*args, **kwargs):
+    <span class="k">pass</span>
+
+
+transformers.modeling_utils.caching_allocator_warmup = _noop_warmup</code></pre>
+
+    <h2><span class="num">§ 04</span>It isn&rsquo;t just GLM</h2>
+
+    <p>Once GLM-4.7-Flash fit on one card, my obvious worry was that I&rsquo;d fixed one model. Maybe GLM was unusual in some way and nothing else cared.</p>
+
+    <p>It isn&rsquo;t. I counted the same thing for every MoE architecture Axolotl supports:</p>
+
+    <figure class="breakout">
+      <img src="uploads/assets/moe-02-expert-share.svg" alt="Expert parameters as a share of total, per architecture" />
+      <figcaption><span class="fignum">fig. 02</span><span>expert parameters as a share of the total, for every MoE architecture Axolotl supports. the range is 88.5% to 97.6%.</span></figcaption>
+    </figure>
+
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Model</th><th>Params</th><th>Expert share</th><th>Expert tensors</th></tr></thead>
+      <tbody>
+        <tr><td>Gemma-4-26B-A4B</td><td class="num">25.8B</td><td class="num">88.5%</td><td class="num">60</td></tr>
+        <tr><td>GLM-4.7-Flash</td><td class="num">29.9B</td><td class="num">92.8%</td><td class="num">92</td></tr>
+        <tr><td>Nemotron-3-Nano-30B-A3B</td><td class="num">31.6B</td><td class="num">93.0%</td><td class="num">46</td></tr>
+        <tr><td>Qwen3.5-35B-A3B</td><td class="num">34.7B</td><td class="num">92.9%</td><td class="num">80</td></tr>
+        <tr><td>Qwen3-Next-80B-A3B</td><td class="num">79.7B</td><td class="num">97.0%</td><td class="num">96</td></tr>
+        <tr><td>GLM-4.5-Air</td><td class="num">106.9B</td><td class="num">93.3%</td><td class="num">90</td></tr>
+        <tr><td>Mistral-Small-4-119B</td><td class="num">118.9B</td><td class="num">97.6%</td><td class="num">72</td></tr>
+        <tr><td>Nemotron-3-Super-120B-A12B</td><td class="num">120.7B</td><td class="num">93.4%</td><td class="num">80</td></tr>
+        <tr><td>Qwen3.5-122B-A10B</td><td class="num">122.1B</td><td class="num">95.0%</td><td class="num">96</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Every one of them keeps between 88.5% and 97.6% of its parameters in fused expert tensors — somewhere between 46 and 96 of them per model, averaging 93.7% of the weights. GLM wasn&rsquo;t the outlier; it was just the one I happened to load first.</p>
+
+    <blockquote>Quantizing everything except the experts is not far from quantizing nothing.</blockquote>
+
+    <h2><span class="num">§ 05</span>What it costs</h2>
+
+    <p>Training-time reserved memory with the feature on, on a single A100:</p>
+
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Model</th><th>Expert params</th><th>nf4</th><th>Expert LoRA</th><th>8-bit</th></tr></thead>
+      <tbody>
+        <tr><td>GLM-4.7-Flash</td><td class="num">27.78B</td><td class="num hi">12.94</td><td class="num">24.76 (measured)</td><td class="num">34.12 (measured)</td></tr>
+        <tr><td>Gemma-4-26B-A4B</td><td class="num">22.83B</td><td class="num hi">10.63</td><td class="num">~25.6</td><td class="num">~34.3</td></tr>
+        <tr><td>Qwen3.5-35B-A3B</td><td class="num">32.24B</td><td class="num hi">15.01</td><td class="num">~31.1</td><td class="num">~43.9</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tbl-note">reserved VRAM during training, GiB.</div>
+
+    <p>I half expected the memory to come out of throughput. It doesn&rsquo;t. On GLM-4.7-Flash at seq 2048, mbs 2 with packing, the 4-bit path ran 1460–1735 tok/s/GPU against 670–715 for 8-bit, which pays for a row-wise int8 dequant on every forward. Loss curves were the same across all of them, around 1.50 at step 1.</p>
+
+    <p class="footnote">Comparing across rows: absolute throughput varies a lot between architectures, so compare rows within a model rather than across. On the same 4-bit path, Gemma-4-26B-A4B ran 492–703 tok/s/GPU and Qwen3.5-35B-A3B ran 124–220, at different sequence lengths and batch sizes.</p>
+
+    <h3>Using it</h3>
+
+    <p>This is the config I run now:</p>
+
+<pre><code><span class="k">base_model:</span> zai-org/GLM-4.7-Flash
+
+<span class="k">adapter:</span> qlora
+<span class="k">load_in_4bit:</span> true
+<span class="k">quantize_moe_experts:</span> true
+
+<span class="c"># optional: put LoRA on the expert weights too</span>
+<span class="k">lora_target_parameters:</span>
+  - mlp.experts.gate_up_proj
+  - mlp.experts.down_proj
+<span class="k">lora_dropout:</span> 0</code></pre>
+
+    <p>It needs <code>adapter: qlora</code> with <code>load_in_4bit: true</code>, or <code>adapter: lora</code> with <code>load_in_8bit: true</code>.</p>
+
+    <p>And the sharp edges. I hit every one of these myself, so you probably will too:</p>
+
+    <ul>
+      <li><code>lora_target_linear</code> is incompatible. Use <code>lora_target_parameters</code>, and set <code>lora_dropout: 0</code> when you do.</li>
+      <li>Loading is slower, because quantization runs on every load and there is no cache.</li>
+      <li>FSDP2 with 8-bit LoRA spikes for the first step or two before settling; 4-bit doesn&rsquo;t. FSDP2 can also use more memory per GPU than single-GPU training, since not every layer shards cleanly.</li>
+      <li><code>cpu_ram_efficient_loading</code> hangs with FSDP2 and QLoRA.</li>
+      <li>The total parameter count is reported wrong. The trainable count is right.</li>
+      <li>CUDA only. I haven&rsquo;t tested ROCm or DeepSpeed.</li>
+    </ul>
+
+    <div class="callout"><strong>Already have an NVFP4 checkpoint?</strong> If your checkpoint is already quantized to NVFP4, from a ModelOpt export, you want NVFP4 MoE LoRA instead: the experts stay 4-bit-packed and the adapter merges back into a plain NVFP4 model.</div>
+
+    <h2><span class="num">§ 06</span>Reproduce it</h2>
+
+    <p>I didn&rsquo;t want these numbers to rot the next time Transformers moves something, so everything above comes from <code>scripts/bench_moe_quant.py</code>, which emits the same tables for any supported model:</p>
+
+<pre><code>python scripts/bench_moe_quant.py --model zai-org/GLM-4.7-Flash --census
+python scripts/bench_moe_quant.py --model Qwen/Qwen3.5-122B-A10B --params</code></pre>
+
+    <p>If you get a different census than I did, I&rsquo;d genuinely like to know.</p>
+
+    <div class="ornament">· · ·</div>
+
+    <h2><span class="num">epilogue</span>Count your fp32 first</h2>
+
+    <p>What started as &ldquo;why does a 30B model need two 80 GiB cards&rdquo; turned into a tour of Transformers&rsquo; loading internals: fused expert stacks, a quantizer with nothing left to hook, and an allocator warmup that pre-books the memory you were about to save.</p>
+
+    <p>Fusing expert stacks into 3-D tensors made MoE models faster, and as a side effect made them invisible to the quantizer. Nothing failed loudly. The model just needed seven times the memory it should have, and the only reason I caught it is that I dumped a dtype census instead of asking for another GPU. I came close to asking for the GPU.</p>
+
+    <p>The lesson I keep relearning is the same one from the MXFP4 work: the interesting bugs are almost never inside one library. They live between two, in an assumption one of them stopped honouring. Nobody&rsquo;s test suite covers that gap, because nobody&rsquo;s test suite is responsible for it.</p>
+
+    <blockquote>So if you&rsquo;re training an MoE and the arithmetic doesn&rsquo;t add up: count your fp32 first.</blockquote>
+
+    <div class="endnote">
+      <div>— ved · september 2026 · <a href="Portfolio.html">back to portfolio</a></div>
+      <div>find me at x/@ant_vedaya · github/ved1beta · ved@axolotl.ai</div>
+      <div style="margin-top: 14px; color: #444;">if you&rsquo;re fine-tuning MoEs and something doesn&rsquo;t fit where it should, i&rsquo;d be glad to compare notes.</div>
+    </div>
+  </article>
+</div>
+
+</body>
+</html>

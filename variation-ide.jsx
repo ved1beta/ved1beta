@@ -12,6 +12,8 @@ function CmdK({ open, onClose, onNav }) {
     { id: "projects/",     label: "projects",              kind: "page" },
     { id: "prs/",          label: "prs — open source merged work", kind: "page" },
     { id: "blog/",          label: "blog — index",          kind: "page" },
+    { id: "blog/moe-fp32.md",        label: "127 gib \u2192 18 gib \u2014 fine-tuning a frontier moe on one gpu", kind: "post" },
+    { id: "blog/expert-parallel.md", label: "expert parallelism in axolotl \u2014 deepep", kind: "post" },
     { id: "blog/mxfp4.md",  label: "mxfp4, end-to-end",     kind: "post" },
     { id: "blog/engram.md", label: "engram — conditional memory via scalable lookup", kind: "post" },
     { id: "contact",       label: "contact",               kind: "page" },
@@ -90,6 +92,8 @@ function VariationIDE() {
     { id: "projects/",      label: "projects/",     group: "dir" },
     { id: "prs/",           label: "prs/",          group: "dir" },
     { id: "blog/",          label: "blog/",         group: "dir" },
+    { id: "blog/moe-fp32.md",        label: "  moe-fp32-census.md",      group: "nested" },
+    { id: "blog/expert-parallel.md", label: "  expert-parallel-deepep.md", group: "nested" },
     { id: "blog/mxfp4.md",  label: "  mxfp4-end-to-end.md", group: "nested" },
     { id: "blog/engram.md", label: "  engram.md",   group: "nested" },
     { id: "contact",       label: "contact",       group: "" },
@@ -165,8 +169,10 @@ function IDEContent({ active, onNav }) {
   if (active === "projects/") return <ProjectsDoc />;
   if (active === "prs/") return <PRsDoc />;
   if (active === "blog/") return <BlogIndexDoc />;
-  if (active === "blog/mxfp4.md") return <BlogPostDoc post={POSTS[0]} />;
-  if (active === "blog/engram.md") return <BlogPostDoc post={POSTS[1]} />;
+  if (active === "blog/moe-fp32.md")        return <BlogPostDoc post={postBySlug("moe-fp32-census")} />;
+  if (active === "blog/expert-parallel.md") return <BlogPostDoc post={postBySlug("expert-parallel-deepep")} />;
+  if (active === "blog/mxfp4.md")  return <BlogPostDoc post={postBySlug("mxfp4-end-to-end")} />;
+  if (active === "blog/engram.md") return <BlogPostDoc post={postBySlug("engram")} />;
   if (active === "contact") return <ContactDoc />;
   return <ReadmeDoc onNav={onNav} />;
 }
@@ -325,7 +331,7 @@ function ReadmeDoc({ onNav }) {
 
   const latestPost = POSTS[0];
   const currentFocus = NOW[0];
-  const latestPostHref = POST_URL[latestPost.slug] || "#";
+  const latestPostHref = postHref(latestPost) || "#";
 
   const wireRow = {
     display: "grid",
@@ -347,7 +353,7 @@ function ReadmeDoc({ onNav }) {
       {docHeader("# readme.md")}
 
       <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 30 }}>
-        <img src="assets/headshot.jpeg" alt="Ved" style={{ width: 56, height: 56, borderRadius: 999, objectFit: "cover", border: "1px solid var(--border)", filter: "grayscale(0.15) contrast(1.02)" }} />
+        <img src="uploads/assets/headshot.jpeg" alt="Ved" style={{ width: 56, height: 56, borderRadius: 999, objectFit: "cover", border: "1px solid var(--border)", filter: "grayscale(0.15) contrast(1.02)" }} />
         <div>
           <div style={{ fontSize: 16, color: "var(--fg)" }}>{SITE.name}</div>
           <div style={{ fontFamily: "var(--mono)", fontSize: 11.5, color: "var(--muted)" }}>systems @ axolotl · ved1beta</div>
@@ -640,9 +646,13 @@ function PRsDoc() {
 }
 
 const POST_URL = {
-  "mxfp4-end-to-end": "blog.html",
-  "engram":           "engram-blog.html",
+  "moe-fp32-census":        "moe-fp32-blog.html",
+  "expert-parallel-deepep": "expert-parallel-blog.html",
+  "mxfp4-end-to-end":       "blog.html",
+  "engram":                 "engram-blog.html",
 };
+const postHref = (p) => POST_URL[p.slug] || null;
+const postBySlug = (slug) => POSTS.find(p => p.slug === slug);
 
 function BlogIndexDoc() {
   return (
@@ -651,10 +661,10 @@ function BlogIndexDoc() {
       <h2 style={{ fontSize: 36, fontWeight: 400, letterSpacing: -0.6, margin: 0 }}>Writing</h2>
       <div style={{ marginTop: 28 }}>
         {POSTS.map(p => {
-          const href = POST_URL[p.slug];
+          const href = postHref(p);
           const inner = (
             <div style={{ padding: "20px 0", borderTop: "1px solid var(--border)" }}>
-              <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{p.date} · {p.read} · {p.tags.join(", ")} {!href && <span style={{ color: "#444" }}>· draft</span>}</div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{p.date} · {p.read} · {p.tags.join(", ")} {p.source && <span>· {p.source}</span>} {!href && <span style={{ color: "#444" }}>· draft</span>}</div>
               <div style={{ fontSize: 20, marginTop: 8 }}>{p.title} {p.featured && <Tag accent>featured</Tag>}</div>
               <div style={{ fontSize: 14, color: "var(--muted)", marginTop: 4 }}>{p.sub}</div>
             </div>
@@ -670,16 +680,17 @@ function BlogIndexDoc() {
 }
 
 function BlogPostDoc({ post }) {
-  const href = POST_URL[post.slug];
+  const href = postHref(post);
   return (
     <div style={{ maxWidth: 720 }}>
       {docHeader("# blog/" + post.slug + ".md")}
-      <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{post.date} · {post.read}</div>
+      <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{post.date} · {post.read}{post.source && <span> · {post.source}</span>}</div>
       <h2 style={{ fontSize: 40, fontWeight: 400, letterSpacing: -0.8, margin: "16px 0 0", lineHeight: 1.1 }}>{post.title}</h2>
       <div style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 19, color: "var(--fg-dim)", marginTop: 10 }}>{post.sub}</div>
       {href ? (
         <div style={{ marginTop: 24 }}>
           <a href={href} style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 12, textDecoration: "none" }}>OPEN FULL ESSAY →</a>
+          {post.canonical && <a href={post.canonical} target="_blank" rel="noreferrer" style={{ marginLeft: 18, color: "var(--fg-dim)", fontFamily: "var(--mono)", fontSize: 12, textDecoration: "none" }}>ORIGINAL ON {post.source.toUpperCase()} ↗</a>}
         </div>
       ) : (
         <p style={{ marginTop: 20, color: "var(--muted)", fontSize: 14 }}>Draft — not yet published.</p>

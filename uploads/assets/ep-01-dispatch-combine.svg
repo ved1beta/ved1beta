@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 0 1040 520" width="1040" height="520"><rect x="-40" width="1040" height="520" fill="#0a0a0a"/>
+<defs><marker id="e7dd3fc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7dd3fc"/></marker><marker id="s7dd3fc" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#7dd3fc"/></marker><marker id="ec4b5fd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c4b5fd"/></marker><marker id="sc4b5fd" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#c4b5fd"/></marker><marker id="e6a6a66" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6a6a66"/></marker><marker id="s6a6a66" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#6a6a66"/></marker><marker id="ea3e635" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#a3e635"/></marker><marker id="sa3e635" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#a3e635"/></marker><marker id="efbbf24" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fbbf24"/></marker><marker id="sfbbf24" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#fbbf24"/></marker></defs>
+<text x="480.0" y="30" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="13" fill="#e8e8e3" text-anchor="middle" font-weight="normal" >one MoE layer under DeepEP</text>
+<text x="480.0" y="48" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#6a6a66" text-anchor="middle" font-weight="normal" >token colour = the rank that owns its chosen expert</text>
+<text x="210.0" y="78" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10" fill="#6a6a66" text-anchor="middle" font-weight="normal" >batch on rank 0</text>
+<rect x="150" y="90" width="20" height="20" rx="3" fill="#7dd3fc"/>
+<rect x="182" y="90" width="20" height="20" rx="3" fill="#fbbf24"/>
+<rect x="214" y="90" width="20" height="20" rx="3" fill="#a3e635"/>
+<rect x="246" y="90" width="20" height="20" rx="3" fill="#7dd3fc"/>
+<text x="430.0" y="78" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10" fill="#6a6a66" text-anchor="middle" font-weight="normal" >batch on rank 1</text>
+<rect x="370" y="90" width="20" height="20" rx="3" fill="#a3e635"/>
+<rect x="402" y="90" width="20" height="20" rx="3" fill="#c4b5fd"/>
+<rect x="434" y="90" width="20" height="20" rx="3" fill="#a3e635"/>
+<rect x="466" y="90" width="20" height="20" rx="3" fill="#7dd3fc"/>
+<text x="650.0" y="78" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10" fill="#6a6a66" text-anchor="middle" font-weight="normal" >batch on rank 2</text>
+<rect x="590" y="90" width="20" height="20" rx="3" fill="#fbbf24"/>
+<rect x="622" y="90" width="20" height="20" rx="3" fill="#7dd3fc"/>
+<rect x="654" y="90" width="20" height="20" rx="3" fill="#c4b5fd"/>
+<rect x="686" y="90" width="20" height="20" rx="3" fill="#fbbf24"/>
+<text x="870.0" y="78" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10" fill="#6a6a66" text-anchor="middle" font-weight="normal" >batch on rank 3</text>
+<rect x="810" y="90" width="20" height="20" rx="3" fill="#a3e635"/>
+<rect x="842" y="90" width="20" height="20" rx="3" fill="#c4b5fd"/>
+<rect x="874" y="90" width="20" height="20" rx="3" fill="#fbbf24"/>
+<rect x="906" y="90" width="20" height="20" rx="3" fill="#c4b5fd"/>
+<path d="M160,110 C160,180 192.0,180 192.0,250" fill="none" stroke="#7dd3fc" stroke-width="1.6" opacity="0.7" marker-end="url(#e7dd3fc)"/>
+<path d="M192,110 C192,180 412.0,180 412.0,250" fill="none" stroke="#fbbf24" stroke-width="1.6" opacity="0.7" marker-end="url(#efbbf24)"/>
+<path d="M224,110 C224,180 632.0,180 632.0,250" fill="none" stroke="#a3e635" stroke-width="1.6" opacity="0.7" marker-end="url(#ea3e635)"/>
+<path d="M256,110 C256,180 192.0,180 192.0,250" fill="none" stroke="#7dd3fc" stroke-width="1.6" opacity="0.7" marker-end="url(#e7dd3fc)"/>
+<path d="M380,110 C380,180 644.0,180 644.0,250" fill="none" stroke="#a3e635" stroke-width="1.6" opacity="0.7" marker-end="url(#ea3e635)"/>
+<path d="M412,110 C412,180 864.0,180 864.0,250" fill="none" stroke="#c4b5fd" stroke-width="1.6" opacity="0.7" marker-end="url(#ec4b5fd)"/>
+<path d="M444,110 C444,180 644.0,180 644.0,250" fill="none" stroke="#a3e635" stroke-width="1.6" opacity="0.7" marker-end="url(#ea3e635)"/>
+<path d="M476,110 C476,180 204.0,180 204.0,250" fill="none" stroke="#7dd3fc" stroke-width="1.6" opacity="0.7" marker-end="url(#e7dd3fc)"/>
+<path d="M600,110 C600,180 436.0,180 436.0,250" fill="none" stroke="#fbbf24" stroke-width="1.6" opacity="0.7" marker-end="url(#efbbf24)"/>
+<path d="M632,110 C632,180 216.0,180 216.0,250" fill="none" stroke="#7dd3fc" stroke-width="1.6" opacity="0.7" marker-end="url(#e7dd3fc)"/>
+<path d="M664,110 C664,180 876.0,180 876.0,250" fill="none" stroke="#c4b5fd" stroke-width="1.6" opacity="0.7" marker-end="url(#ec4b5fd)"/>
+<path d="M696,110 C696,180 436.0,180 436.0,250" fill="none" stroke="#fbbf24" stroke-width="1.6" opacity="0.7" marker-end="url(#efbbf24)"/>
+<path d="M820,110 C820,180 668.0,180 668.0,250" fill="none" stroke="#a3e635" stroke-width="1.6" opacity="0.7" marker-end="url(#ea3e635)"/>
+<path d="M852,110 C852,180 888.0,180 888.0,250" fill="none" stroke="#c4b5fd" stroke-width="1.6" opacity="0.7" marker-end="url(#ec4b5fd)"/>
+<path d="M884,110 C884,180 448.0,180 448.0,250" fill="none" stroke="#fbbf24" stroke-width="1.6" opacity="0.7" marker-end="url(#efbbf24)"/>
+<path d="M916,110 C916,180 888.0,180 888.0,250" fill="none" stroke="#c4b5fd" stroke-width="1.6" opacity="0.7" marker-end="url(#ec4b5fd)"/>
+<rect x="330.0" y="168" width="300" height="20" fill="#0a0a0a"/>
+<text x="480.0" y="183" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#e8e8e3" text-anchor="middle" font-weight="normal" >1 · dispatch — fused all-to-all over NVLink</text>
+<rect x="120" y="252" width="180" height="80" rx="8" fill="#121212" stroke="#7dd3fc" stroke-opacity="0.6"/>
+<text x="134" y="274" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="12" fill="#e8e8e3" text-anchor="start" font-weight="bold" >GPU 0</text>
+<rect x="140" y="288" width="60" height="26" rx="13" fill="none" stroke="#7dd3fc"/>
+<text x="170" y="305" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#7dd3fc" text-anchor="middle" font-weight="normal" >E0</text>
+<rect x="220" y="288" width="60" height="26" rx="13" fill="none" stroke="#7dd3fc"/>
+<text x="250" y="305" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#7dd3fc" text-anchor="middle" font-weight="normal" >E1</text>
+<rect x="340" y="252" width="180" height="80" rx="8" fill="#121212" stroke="#fbbf24" stroke-opacity="0.6"/>
+<text x="354" y="274" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="12" fill="#e8e8e3" text-anchor="start" font-weight="bold" >GPU 1</text>
+<rect x="360" y="288" width="60" height="26" rx="13" fill="none" stroke="#fbbf24"/>
+<text x="390" y="305" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#fbbf24" text-anchor="middle" font-weight="normal" >E2</text>
+<rect x="440" y="288" width="60" height="26" rx="13" fill="none" stroke="#fbbf24"/>
+<text x="470" y="305" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#fbbf24" text-anchor="middle" font-weight="normal" >E3</text>
+<rect x="560" y="252" width="180" height="80" rx="8" fill="#121212" stroke="#a3e635" stroke-opacity="0.6"/>
+<text x="574" y="274" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="12" fill="#e8e8e3" text-anchor="start" font-weight="bold" >GPU 2</text>
+<rect x="580" y="288" width="60" height="26" rx="13" fill="none" stroke="#a3e635"/>
+<text x="610" y="305" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#a3e635" text-anchor="middle" font-weight="normal" >E4</text>
+<rect x="660" y="288" width="60" height="26" rx="13" fill="none" stroke="#a3e635"/>
+<text x="690" y="305" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#a3e635" text-anchor="middle" font-weight="normal" >E5</text>
+<rect x="780" y="252" width="180" height="80" rx="8" fill="#121212" stroke="#c4b5fd" stroke-opacity="0.6"/>
+<text x="794" y="274" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="12" fill="#e8e8e3" text-anchor="start" font-weight="bold" >GPU 3</text>
+<rect x="800" y="288" width="60" height="26" rx="13" fill="none" stroke="#c4b5fd"/>
+<text x="830" y="305" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#c4b5fd" text-anchor="middle" font-weight="normal" >E6</text>
+<rect x="880" y="288" width="60" height="26" rx="13" fill="none" stroke="#c4b5fd"/>
+<text x="910" y="305" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#c4b5fd" text-anchor="middle" font-weight="normal" >E7</text>
+<rect x="255" y="342" width="450" height="20" fill="#0a0a0a"/><text x="480.0" y="356" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#e8e8e3" text-anchor="middle" font-weight="normal" >2 · each rank runs GEMMs for its own experts only</text>
+<rect x="215" y="366" width="530" height="20" fill="#0a0a0a"/><text x="480.0" y="380" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="11" fill="#e8e8e3" text-anchor="middle" font-weight="normal" >3 · combine — same routes in reverse, plus the top-k weighted sum</text>
+<path d="M210.0,392 L210.0,440" stroke="#6a6a66" stroke-dasharray="3 4" marker-end="url(#e6a6a66)"/>
+<path d="M430.0,392 L430.0,440" stroke="#6a6a66" stroke-dasharray="3 4" marker-end="url(#e6a6a66)"/>
+<path d="M650.0,392 L650.0,440" stroke="#6a6a66" stroke-dasharray="3 4" marker-end="url(#e6a6a66)"/>
+<path d="M870.0,392 L870.0,440" stroke="#6a6a66" stroke-dasharray="3 4" marker-end="url(#e6a6a66)"/>
+<text x="210.0" y="440" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10" fill="#6a6a66" text-anchor="middle" font-weight="normal" >outputs, back on rank 0</text>
+<rect x="150" y="452" width="20" height="20" rx="3" fill="#7dd3fc"/>
+<rect x="182" y="452" width="20" height="20" rx="3" fill="#fbbf24"/>
+<rect x="214" y="452" width="20" height="20" rx="3" fill="#a3e635"/>
+<rect x="246" y="452" width="20" height="20" rx="3" fill="#7dd3fc"/>
+<text x="430.0" y="440" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10" fill="#6a6a66" text-anchor="middle" font-weight="normal" >outputs, back on rank 1</text>
+<rect x="370" y="452" width="20" height="20" rx="3" fill="#a3e635"/>
+<rect x="402" y="452" width="20" height="20" rx="3" fill="#c4b5fd"/>
+<rect x="434" y="452" width="20" height="20" rx="3" fill="#a3e635"/>
+<rect x="466" y="452" width="20" height="20" rx="3" fill="#7dd3fc"/>
+<text x="650.0" y="440" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10" fill="#6a6a66" text-anchor="middle" font-weight="normal" >outputs, back on rank 2</text>
+<rect x="590" y="452" width="20" height="20" rx="3" fill="#fbbf24"/>
+<rect x="622" y="452" width="20" height="20" rx="3" fill="#7dd3fc"/>
+<rect x="654" y="452" width="20" height="20" rx="3" fill="#c4b5fd"/>
+<rect x="686" y="452" width="20" height="20" rx="3" fill="#fbbf24"/>
+<text x="870.0" y="440" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="10" fill="#6a6a66" text-anchor="middle" font-weight="normal" >outputs, back on rank 3</text>
+<rect x="810" y="452" width="20" height="20" rx="3" fill="#a3e635"/>
+<rect x="842" y="452" width="20" height="20" rx="3" fill="#c4b5fd"/>
+<rect x="874" y="452" width="20" height="20" rx="3" fill="#fbbf24"/>
+<rect x="906" y="452" width="20" height="20" rx="3" fill="#c4b5fd"/>
+</svg>

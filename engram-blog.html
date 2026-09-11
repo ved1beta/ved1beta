@@ -128,7 +128,7 @@
     <h1 class="title">Engram: Conditional Memory via Scalable Lookup</h1>
     <div class="dek">DeepSeek&rsquo;s answer to the second sparsity problem — the one MoE didn&rsquo;t touch.</div>
     <div class="author-card">
-      <img src="assets/headshot.jpeg" alt="Ved" />
+      <img src="uploads/assets/headshot.jpeg" alt="Ved" />
       <div class="info">
         <div>by <a href="Portfolio.html">Ved</a> · systems engineer at Axolotl AI</div>
         <div>github / <a href="https://github.com/ved1beta">ved1beta</a> · x / @ant_vedaya</div>
@@ -168,7 +168,7 @@
     <p>The lookup keys in Engram are N-grams. An N-gram is just a contiguous sequence of N tokens — instead of looking at one token in isolation, you look at pairs, triples, or longer windows together.</p>
 
     <figure class="breakout">
-      <img src="assets/ing2.png" alt="N-grams by NLP: unigrams (N=1), bigrams (N=2), trigrams (N=3) over the sentence This is a Sentence" />
+      <img src="uploads/assets/ing2.png" alt="N-grams by NLP: unigrams (N=1), bigrams (N=2), trigrams (N=3) over the sentence This is a Sentence" />
       <figcaption><span class="fignum">fig. 01</span><span>N=1 → unigrams, N=2 → bigrams, N=3 → trigrams. Engram uses bigrams and trigrams as memory keys.</span></figcaption>
     </figure>
 
@@ -183,7 +183,7 @@
     <p>Engram sits <em>before</em> both attention and MoE inside selected transformer layers. When a token sequence arrives, the module runs two phases: <strong>retrieval</strong> and <strong>fusion</strong>.</p>
 
     <figure class="breakout">
-      <img src="assets/paper_fig1.png" alt="Figure 1 from the Engram paper — transformer block with Engram firing first, attention, then MoE; zoom-in showing 2-gram and 3-gram embedding lookup, concat, linear projections, scaled dot-product gating, and a short conv" />
+      <img src="uploads/assets/paper_fig1.png" alt="Figure 1 from the Engram paper — transformer block with Engram firing first, attention, then MoE; zoom-in showing 2-gram and 3-gram embedding lookup, concat, linear projections, scaled dot-product gating, and a short conv" />
       <figcaption><span class="fignum">fig. 02</span><span>Engram fires first, then attention, then MoE. Inside the module: 2-gram and 3-gram embeddings are hashed and retrieved, concatenated, projected, gated against the current hidden state, then refined by a short causal conv before the residual add.</span></figcaption>
     </figure>
 
@@ -216,7 +216,7 @@
     <p>A 130k-token vocabulary with bigrams and trigrams yields a table with hundreds of millions to billions of rows. It cannot live on a single GPU. The paper&rsquo;s solution is to shard the table across all available GPUs and use <strong>All-to-All</strong> communication to route each lookup to the device that owns it.</p>
 
     <figure class="breakout">
-      <img src="assets/paper_fig2.png" alt="Figure 2 from the Engram paper — (a) training with All-to-All across sharded GPUs, (b) inference with tables offloaded to host memory and asynchronous prefetching" />
+      <img src="uploads/assets/paper_fig2.png" alt="Figure 2 from the Engram paper — (a) training with All-to-All across sharded GPUs, (b) inference with tables offloaded to host memory and asynchronous prefetching" />
       <figcaption><span class="fignum">fig. 03</span><span>(a) Training: the table is sharded across GPUs; All-to-All routes ID requests to the owning device and returns embeddings. (b) Inference: tables offload to host memory; deterministic hashing lets the host prefetch the next batch&rsquo;s rows while the GPU runs the current batch — overlap with &lt;3% overhead.</span></figcaption>
     </figure>
 
