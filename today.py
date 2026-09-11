@@ -118,8 +118,11 @@ FATAL_ERRORS = {'FORBIDDEN', 'INSUFFICIENT_SCOPES', 'UNAUTHORIZED', 'NOT_FOUND'}
 _WARNED = set()
 
 
-def check_graphql(func_name, payload):
+def check_graphql(func_name, payload, tolerate=None):
     """Raise on fatal GraphQL errors; tolerate per-field ones.
+
+    `tolerate(errors)` -> True lets a caller accept errors that would otherwise
+    be fatal, when it knows how to work around the holes they leave in `data`.
 
     GraphQL answers HTTP 200 for everything. A permission failure comes back as
     errors + data:null -- unhandled, that null propagates and dies later as an
@@ -134,7 +137,8 @@ def check_graphql(func_name, payload):
     if errors:
         kinds = {e.get('type') for e in errors}
         msgs = '; '.join(e.get('message', '?') for e in errors)
-        if data is None or kinds & FATAL_ERRORS:
+        tolerated = data is not None and tolerate is not None and tolerate(errors)
+        if data is None or (kinds & FATAL_ERRORS and not tolerated):
             hint = f'\n{PERM_HINT}' if kinds & {'FORBIDDEN', 'INSUFFICIENT_SCOPES'} else ''
             raise Exception(f'{func_name}: GraphQL errors: {msgs}{hint}')
         if msgs not in _WARNED:      # partial data -- note it once, keep going
@@ -146,10 +150,10 @@ def check_graphql(func_name, payload):
     return payload
 
 
-def simple_request(func_name, query, variables):
+def simple_request(func_name, query, variables, tolerate=None):
     r = post_graphql(query, variables)
     if r.status_code == 200:
-        check_graphql(func_name, r.json())
+        check_graphql(func_name, r.json(), tolerate)
         return r
     if r.status_code == 401:
         raise Exception(f'{func_name}: 401 Unauthorized -- ACCESS_TOKEN is invalid, '
@@ -188,13 +192,17 @@ def graph_repos_stars(count_type, owner_affiliation, cursor=None):
         user(login: $login) {
             repositories(first: 100, after: $cursor, ownerAffiliations: $owner_affiliation) {
                 totalCount
-                edges { node { ... on Repository { nameWithOwner stargazers { totalCount } } } }
+                edges { node { ... on Repository { nameWithOwner stargazerCount } } }
                 pageInfo { endCursor hasNextPage }
             }
         }
     }'''
     variables = {'owner_affiliation': owner_affiliation, 'login': USER_NAME, 'cursor': cursor}
-    r = simple_request(graph_repos_stars.__name__, query, variables)
+    # The affiliation list pulls in org and collaborator repos. A fine-grained
+    # PAT scoped to this account can list them but may be refused fields on
+    # them; GitHub nulls that repo's node. Count it as 0 rather than abort.
+    r = simple_request(graph_repos_stars.__name__, query, variables,
+                       tolerate=_only_repo_node_errors)
     repos = r.json()['data']['user']['repositories']
     if count_type == 'repos':
         return repos['totalCount']
@@ -202,8 +210,14 @@ def graph_repos_stars(count_type, owner_affiliation, cursor=None):
         return stars_counter(repos['edges'])
 
 
+def _only_repo_node_errors(errors):
+    """True when every error is scoped to one repo node, not the query itself."""
+    return all((e.get('path') or [])[:3] == ['user', 'repositories', 'edges']
+               and len(e['path']) > 3 for e in errors)
+
+
 def stars_counter(data):
-    return sum(node['node']['stargazers']['totalCount'] for node in data)
+    return sum((edge['node'] or {}).get('stargazerCount') or 0 for edge in data)
 
 
 # `author:` filters server-side, so a repo costs pages proportional to *our*
