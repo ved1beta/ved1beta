@@ -260,9 +260,13 @@ def recursive_loc(owner, repo_name, data, cache_comment):
 
         for edge in history['edges']:
             node = edge['node']
-            # `author` is null for commits with no Git identity; `additions` and
-            # `deletions` are null on commits GitHub declines to diff (the
-            # "count for this commit is unavailable" error above).
+            # `additions`/`deletions` are non-null in the schema, so when GitHub
+            # declines to diff a commit (the "count for this commit is
+            # unavailable" error above) the whole node is nulled, author and all.
+            # Nothing to attribute -- skip it.
+            if node is None:
+                continue
+            # `author` is null for commits with no Git identity.
             author = node.get('author') or {}
             if author.get('user') == OWNER_ID:
                 my_commits += 1
