@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Expert Parallelism in Axolotl — ved1beta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0a0a; --surface: #121212; --border: #1f1f1f;
+    --fg: #e8e8e3; --fg-dim: #b8b8b3; --muted: #6a6a66;
+    --accent: #a3e635;
+    --sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --serif: "Instrument Serif", Georgia, serif;
+  }
+  html, body { margin:0; padding:0; background:var(--bg); color:var(--fg); font-family:var(--sans); }
+  * { box-sizing: border-box; }
+  ::selection { background: color-mix(in oklab, var(--accent) 35%, transparent); color: var(--fg); }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in oklab, var(--accent) 40%, transparent); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 56px 32px 140px; }
+  .topbar { display:flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .6px; text-transform: uppercase; max-width: 1200px; margin: 0 auto; padding: 20px 32px; border-bottom: 1px solid var(--border); }
+  .topbar a { color: var(--fg-dim); border: none; }
+  .topbar a:hover { color: var(--accent); }
+
+  .meta { font-family: var(--mono); font-size: 11.5px; color: var(--muted); letter-spacing: .4px; display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+  .meta .dot { color: #333; }
+
+  h1.title { font-size: 56px; font-weight: 400; letter-spacing: -1.2px; line-height: 1.05; margin: 0; text-wrap: balance; }
+  .dek { font-family: var(--serif); font-style: italic; font-size: 26px; color: var(--fg-dim); line-height: 1.35; margin-top: 18px; text-wrap: pretty; }
+  .byline { margin-top: 36px; font-family: var(--mono); font-size: 12px; color: var(--muted); padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+
+  article p { font-size: 17.5px; line-height: 1.75; color: #d8d8d3; margin: 22px 0; text-wrap: pretty; }
+  article h2 { font-size: 28px; font-weight: 400; letter-spacing: -.4px; margin: 72px 0 4px; line-height: 1.2; }
+  article h2 .num { font-family: var(--mono); font-size: 12px; color: var(--accent); display: block; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+  article h3 { font-size: 20px; font-weight: 500; margin: 44px 0 -6px; color: var(--fg); }
+  article h3 .pr { font-family: var(--mono); font-size: 11.5px; color: var(--accent); letter-spacing: .5px; margin-left: 4px; }
+
+  article ul { padding-left: 22px; }
+  article li { font-size: 17px; line-height: 1.7; color: #d8d8d3; margin: 10px 0; }
+  article li strong { color: var(--fg); font-weight: 500; }
+
+  article code { font-family: var(--mono); font-size: 14.5px; color: var(--accent); background: color-mix(in oklab, var(--accent) 6%, transparent); padding: 1px 6px; border-radius: 3px; }
+  pre { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px 22px; overflow: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.7; color: #d0d0cb; }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+  pre .k { color: var(--accent); }
+  pre .c { color: var(--muted); font-style: italic; }
+
+  blockquote { border-left: 2px solid var(--accent); margin: 28px 0; padding: 4px 0 4px 20px; color: var(--fg-dim); font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.55; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 72px 0; }
+
+  .footnote { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 10px; line-height: 1.65; }
+
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .8px; color: var(--accent); text-transform: uppercase; margin-top: 48px; }
+
+  .lede { font-size: 20px; color: var(--fg); line-height: 1.6; margin-top: 30px; }
+  .lede::first-line { letter-spacing: .2px; }
+
+  .endnote { margin-top: 120px; padding-top: 36px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+
+  .tag-row { display:flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-family: var(--mono); font-size: 10.5px; color: var(--muted); border: 1px solid var(--border); padding: 3px 8px; border-radius: 3px; letter-spacing: .5px; text-transform: uppercase; }
+
+  .ornament { display:flex; justify-content: center; margin: 48px 0; color: var(--muted); letter-spacing: 8px; font-family: var(--mono); font-size: 12px; }
+
+  /* figures */
+  figure { margin: 56px 0; }
+  figure.breakout { width: calc(100% + 160px); margin-left: -80px; margin-right: -80px; }
+  figure.fullbleed { width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); }
+  figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 2px; }
+  figure.fullbleed img { border-left: none; border-right: none; border-radius: 0; }
+  figcaption { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 14px; letter-spacing: .3px; line-height: 1.6; display: flex; gap: 14px; }
+  figcaption .fignum { color: var(--accent); white-space: nowrap; }
+  @media (max-width: 900px) { figure.breakout, figure.fullbleed { width: 100%; margin-left: 0; margin-right: 0; } }
+
+  .author-card { display: flex; align-items: center; gap: 14px; margin-top: 32px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+  .author-card img { width: 44px; height: 44px; border-radius: 999px; object-fit: cover; border: 1px solid var(--border); filter: grayscale(0.15) contrast(1.02); }
+  .author-card .info { font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .author-card .info a { color: var(--fg-dim); border: none; }
+  .author-card .info a:hover { color: var(--accent); }
+
+  /* tables */
+  .tbl { width: 100%; border-collapse: collapse; margin: 32px 0; font-size: 14.5px; }
+  .tbl th, .tbl td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .tbl th { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .6px; text-transform: uppercase; font-weight: 500; }
+  .tbl td { color: #d8d8d3; }
+  .tbl td.num { font-family: var(--mono); font-size: 13.5px; }
+  .tbl td.hi { color: var(--accent); }
+  .tbl-note { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: -20px; }
+  .callout { border: 1px solid var(--border); background: var(--surface); border-radius: 4px; padding: 18px 22px; margin: 32px 0; font-size: 15px; line-height: 1.7; color: var(--fg-dim); }
+  .callout strong { color: var(--fg); font-weight: 500; }
+  .callout code { font-size: 13px; }
+  .tbl-wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="Portfolio.html">← ved1beta</a>
+  <div>axolotl engineering · 2026</div>
+</div>
+
+<div class="wrap">
+  <article>
+    <div class="meta">
+      <span>2026-09-11</span><span class="dot">·</span>
+      <span>6 min read</span><span class="dot">·</span>
+      <span class="tag-row"><span class="tag">moe</span><span class="tag">deepep</span><span class="tag">nd-parallelism</span></span>
+    </div>
+
+    <h1 class="title">Expert Parallelism in Axolotl</h1>
+    <div class="dek">Expert parallelism with DeepSeek&rsquo;s fused all-to-all kernels, and how it composes with FSDP and context parallelism.</div>
+    <div class="author-card">
+      <img src="uploads/assets/headshot.jpeg" alt="Ved" />
+      <div class="info">
+        <div>by <a href="Portfolio.html">Ved</a> · systems engineer at Axolotl AI · originally on the Axolotl engineering blog</div>
+        <div>github / <a href="https://github.com/ved1beta">ved1beta</a> · x / @ant_vedaya</div>
+      </div>
+    </div>
+
+    <p class="lede">This post walks through Axolotl&rsquo;s new Expert Parallelism integration, built on DeepEP — DeepSeek&rsquo;s fused communication library for MoE dispatch and combine.</p>
+
+    <figure class="breakout">
+      <img src="uploads/assets/ep-00-pareto.png" alt="Throughput vs peak memory per rank for FSDP, EP, and FSDP×EP configs on 4 and 8 H100s" />
+      <figcaption><span class="fignum">fig. 00</span><span>Qwen3-30B-A3B-Instruct, full fine-tune, H100. on 4 GPUs every config is pareto-valid; on 8, FSDP=4 × EP=2 matches pure FSDP throughput at 28 GiB/rank.</span></figcaption>
+    </figure>
+
+    <h3>Why do we care?</h3>
+
+    <p>In fine-tuning, a good open model increasingly means a Mixture-of-Experts model. Most of an MoE&rsquo;s parameters live in the experts, and experts create a very specific problem that dense models never had:</p>
+
+    <blockquote>Your tokens are in the wrong place.</blockquote>
+
+    <p>Each token gets routed to a handful of experts, and if those experts live on other GPUs, the tokens have to physically travel there, get processed, and travel back. This exchange is the all-to-all collective. If you want a beautiful deep dive into how all-to-all actually moves bytes through a cluster, go read Aleksa Gordić&rsquo;s post on collective operations. We&rsquo;ll stay one level up: how Axolotl now handles this for you.</p>
+
+    <ul>
+      <li><strong>What Expert Parallelism buys you</strong></li>
+      <li><strong>Turning it on</strong> (it&rsquo;s three lines of YAML)</li>
+      <li><strong>Composing EP with your local MoE kernels</strong></li>
+      <li><strong>ND parallelism:</strong> EP × FSDP × CP</li>
+    </ul>
+
+    <div class="ornament">· · ·</div>
+
+    <h2><span class="num">§ 01</span>What Expert Parallelism buys you</h2>
+
+    <p>Before EP, your realistic option for a big MoE in Axolotl was FSDP: shard everything across all GPUs, all-gather parameters as you go. This works! But experts dominate the parameter count, and FSDP treats them like any other weight — so every forward pass all-gathers expert weights that most tokens will never even touch.</p>
+
+    <p>Expert Parallelism flips the logic:</p>
+
+    <blockquote>Don&rsquo;t move the experts to the tokens. Move the tokens to the experts.</blockquote>
+
+    <p>With <code>expert_parallel_size: N</code>, each rank owns <code>num_experts / N</code> experts permanently. From there, every MoE layer is a three-step dance:</p>
+
+    <figure class="breakout">
+      <img src="uploads/assets/ep-01-dispatch-combine.svg" alt="One MoE layer under DeepEP: dispatch, local expert GEMMs, combine" />
+      <figcaption><span class="fignum">fig. 01</span><span>one MoE layer under DeepEP. dispatch is a fused all-to-all; each rank runs GEMMs only for the experts it owns; combine reverses the routes and applies the top-k weighted sum.</span></figcaption>
+    </figure>
+
+    <p>Two things make DeepEP specifically great here:</p>
+
+    <ul>
+      <li>The dispatch/combine kernels are <strong>fused and topology-aware</strong> — NVLink within a node, RDMA across nodes — rather than a generic <code>all_to_all</code> call plus a pile of index bookkeeping.</li>
+      <li>Each rank naturally sees a different batch. So EP is <strong>data-parallel with respect to your data, and model-parallel with respect to expert weights</strong>. You get both at once, on the same GPUs.</li>
+    </ul>
+
+    <div class="callout"><strong>Hardware requirements:</strong> Ampere (sm_80, A100) or Hopper (sm_90, H100) with all-pairs NVLink. One honest caveat: DeepEP&rsquo;s low-latency kernels are inter-node only by design (pure RDMA via IBGDA), so single-node setups always use the standard kernels — which is completely fine for training.</div>
+
+    <h2><span class="num">§ 02</span>Turning it on</h2>
+
+    <p>Here&rsquo;s the whole thing:</p>
+
+<pre><code><span class="k">plugins:</span>
+  - axolotl.integrations.expert_parallel.ExpertParallelPlugin
+
+<span class="k">expert_parallel_size:</span> 2   <span class="c"># 1 = disabled (default)</span></code></pre>
+
+    <p>That&rsquo;s it for pure EP. Under the hood, the plugin slices each <code>Experts</code> module&rsquo;s <code>gate_up_proj</code> / <code>down_proj</code> along the experts dimension and swaps the dispatch/combine path for DeepEP.</p>
+
+    <p>A real 4-GPU config (full fine-tune of Qwen3-30B-A3B, EP × FSDP):</p>
+
+<pre><code><span class="k">base_model:</span> Qwen/Qwen3-30B-A3B-Instruct-2507
+
+<span class="k">plugins:</span>
+  - axolotl.integrations.expert_parallel.ExpertParallelPlugin
+
+<span class="k">expert_parallel_size:</span> 2
+<span class="k">dp_shard_size:</span> 2          <span class="c"># ep × dp_shard must equal world_size</span>
+
+<span class="k">fsdp_config:</span>
+  fsdp_version: 2
+  auto_wrap_policy: TRANSFORMER_BASED_WRAP
+  transformer_layer_cls_to_wrap: Qwen3MoeDecoderLayer
+  state_dict_type: FULL_STATE_DICT
+  sharding_strategy: FULL_SHARD</code></pre>
+
+    <h2><span class="num">§ 03</span>Composing EP with your local MoE kernels</h2>
+
+    <p>Here&rsquo;s the part we&rsquo;re most happy with: EP doesn&rsquo;t replace your expert compute, only the token movement. Whatever local experts kernel you already configured keeps doing the GEMMs — EP just wraps it in dispatch/combine:</p>
+
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Your existing config</th><th>Local kernel under DeepEP</th></tr></thead>
+      <tbody>
+        <tr><td><code>use_scattermoe: true</code></td><td>ScatterMoE (Triton)</td></tr>
+        <tr><td><code>use_sonicmoe: true</code></td><td>SonicMoE (bf16 experts)</td></tr>
+        <tr><td><code>experts_implementation: grouped_mm</code> / <code>batched_mm</code></td><td>grouped_mm (transformers)</td></tr>
+        <tr><td><code>experts_implementation: eager</code></td><td>eager Python loop</td></tr>
+        <tr><td>(unset)</td><td>grouped_mm (default)</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>So <code>use_scattermoe: true</code> + <code>expert_parallel_size: 2</code> gives you Triton-fused local expert GEMMs and DeepEP token routing, with zero extra config. The composition is registered internally as <code>deep_ep_scattermoe</code> — you can spot it in the logs.</p>
+
+    <p>Our recommendations right now:</p>
+
+    <ul>
+      <li><strong>ScatterMoE</strong> is the battle-tested path: it runs on any CUDA GPU, composes with EP, and it&rsquo;s what we&rsquo;ve validated most heavily, including LoRA fused into the grouped GEMM.</li>
+      <li><strong>grouped_mm / eager</strong> are the reference transformers implementations; grouped_mm is the default and it&rsquo;s solid.</li>
+    </ul>
+
+    <h2><span class="num">§ 04</span>ND parallelism: EP × FSDP × CP</h2>
+
+    <p>Sharding experts is great, but the non-expert weights (attention, embeddings, router) still need a home, and long sequences still need splitting. This is where mesh axes come in.</p>
+
+    <p>The trick is that EP composes with FSDP on <em>orthogonal</em> mesh axes. Experts shard across the <code>ep</code> axis; non-expert params shard across <code>dp_shard</code>. The two sets of collectives run on completely disjoint process groups — the all-to-all for tokens and the all-gathers for FSDP never step on each other. Rows share weights, columns move tokens.</p>
+
+    <figure class="breakout">
+      <img src="uploads/assets/ep-02-mesh.svg" alt="EP × FSDP on a 2×2 mesh: tokens move along ep, weights shard along dp_shard" />
+      <figcaption><span class="fignum">fig. 02</span><span>EP × FSDP on a 2×2 mesh. two disjoint process groups: tokens move on <code>ep</code>, weights shard on <code>dp_shard</code>.</span></figcaption>
+    </figure>
+
+    <p>What&rsquo;s supported today:</p>
+
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Combination</th><th>Status</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>EP</td><td class="hi">✓</td><td>pure EP, experts sharded across all ranks</td></tr>
+        <tr><td>EP × dp_shard</td><td class="hi">✓</td><td>EP + FSDP2 on orthogonal axes</td></tr>
+        <tr><td>EP × cp</td><td class="hi">✓</td><td>sequence shards on cp (needs CP-aware attention, e.g. GLM DSA via the kernels plugin)</td></tr>
+        <tr><td>EP × cp × dp_shard</td><td class="hi">✓</td><td>all three at once</td></tr>
+        <tr><td>EP × tp</td><td>✗</td><td>not yet — raises <code>NotImplementedError</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="endnote">
+      <div>— ved · september 2026 · <a href="Portfolio.html">back to portfolio</a></div>
+      <div>find me at x/@ant_vedaya · github/ved1beta · ved@axolotl.ai</div>
+    </div>
+  </article>
+</div>
+
+</body>
+</html>
